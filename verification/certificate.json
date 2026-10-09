@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "record_type": "unsigned_local_verification_record",
+  "repository": "https://github.com/dedalus3/toposic-hom-counterexample",
+  "status": "passed",
+  "source_manifest": "verification/source-snapshot.json",
+  "source_manifest_sha256": "f97c11ca5780989354a8e17e039a7f6264b20d65bb599c9b269c7c9e43f0fd0f",
+  "source_file_count": 76,
+  "theorems": [
+    {
+      "name": "EtaleCounterexample.finiteField_counterexample",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    {
+      "name": "EtaleCounterexample.arithmetic_counterexample",
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    }
+  ],
+  "recorded_run": {
+    "started_utc": "2026-10-09T22:45:05.026214+00:00",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "verification_kind": "incremental project build followed by axiom audit and serialized project kernel replay",
+    "full_dependency_fresh_replay": false,
+    "commands": [
+      {
+        "command": [
+          "lake",
+          "build"
+        ],
+        "started_utc": "2026-10-09T22:45:05.200599+00:00",
+        "exit_code": 0,
+        "finished_utc": "2026-10-09T22:45:07.519066+00:00",
+        "log": "build.log"
+      },
+      {
+        "command": [
+          "lake",
+          "env",
+          "lean",
+          "Audit.lean"
+        ],
+        "started_utc": "2026-10-09T22:45:07.519327+00:00",
+        "exit_code": 0,
+        "finished_utc": "2026-10-09T22:45:12.795110+00:00",
+        "log": "axioms-and-signatures.log"
+      },
+      {
+        "command": [
+          "lake",
+          "env",
+          "leanchecker",
+          "-v",
+          "EtaleCounterexample"
+        ],
+        "started_utc": "2026-10-09T22:45:12.795407+00:00",
+        "exit_code": 0,
+        "finished_utc": "2026-10-09T22:55:51.346341+00:00",
+        "log": "kernel-replay.log"
+      }
+    ],
+    "source_files_unchanged": true,
+    "lean_version": "Lean (version 4.34.0, arm64-apple-darwin24.6.0, commit 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b, Release)",
+    "mathlib_revision": "5ed2965256430c3649e86755f9576b54eca72435",
+    "proof_object_count": 71,
+    "implementation_module_count": 70,
+    "finished_utc": "2026-10-09T22:55:51.410351+00:00",
+    "status": "passed"
+  },
+  "replayed_project_modules": 71,
+  "evidence_sha256": {
+    "verification/recorded/axioms-and-signatures.log": "83d9101f4120d05143227d072ed8bf7ee272baca3210d20e4d7afb910f40e612",
+    "verification/recorded/build.log": "118295d555b5ca0f10f7a871487de82b8100d62fa2fa9cead7dd10cc63d3ca6f",
+    "verification/recorded/final-theorems.log": "6a2e90e3a640a0d16a05408607a387b305e373096575326d7a356b47eacebc7b",
+    "verification/recorded/kernel-replay.log": "e9ce7a8221fc902a8014ea6512769bf55cce3d0b406e6916f3a0915b94aad4d8",
+    "verification/recorded/run.json": "2c973c4dbb054b55f086dcafb194580e4551ccf94a6091ad3f74e23dcac32df8"
+  },
+  "limitations": [
+    "Unsigned record of commands run locally; not an external certificate or endorsement.",
+    "Build used existing dependency caches and existing build artifacts.",
+    "Leanchecker used Lean kernel replay of serialized project declarations against imported environments.",
+    "Not a second kernel implementation or a --fresh replay of all dependency declarations.",
+    "Formal correctness does not establish novelty, historical scope, or the intended interpretation of definitions.",
+    "Paper, informal family classification, and historical discussion are not certified by this record."
+  ]
+}

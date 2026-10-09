@@ -1,0 +1,2170 @@
+@EtaleCounterexample.etale_universalHomeomorphism_isIso : ∀ {X Y : AlgebraicGeometry.Scheme} (f : X ⟶ Y)
+  [AlgebraicGeometry.Etale f], EtaleCounterexample.universalHomeomorphisms f → CategoryTheory.IsIso f
+EtaleCounterexample.schemeFrobenius : (X : AlgebraicGeometry.Scheme) → (p : ℕ) → [Fact (Nat.Prime p)] → ↑p = 0 → (X ⟶ X)
+@EtaleCounterexample.schemeFrobenius_naturality : ∀ {X Y : AlgebraicGeometry.Scheme} (f : X ⟶ Y) (p : ℕ)
+  [inst : Fact (Nat.Prime p)] (hX : ↑p = 0) (hY : ↑p = 0),
+  CategoryTheory.CategoryStruct.comp (EtaleCounterexample.schemeFrobenius X p hX) f =
+    CategoryTheory.CategoryStruct.comp f (EtaleCounterexample.schemeFrobenius Y p hY)
+EtaleCounterexample.schemeFrobenius_universallyInjective : ∀ (X : AlgebraicGeometry.Scheme) (p : ℕ)
+  [inst : Fact (Nat.Prime p)] (h : ↑p = 0),
+  AlgebraicGeometry.UniversallyInjective (EtaleCounterexample.schemeFrobenius X p h)
+@EtaleCounterexample.relativeFrobenius_isIso : ∀ {X Y : AlgebraicGeometry.Scheme} (f : X ⟶ Y) (p : ℕ)
+  [inst : Fact (Nat.Prime p)] (h : ↑p = 0) [AlgebraicGeometry.Etale f],
+  CategoryTheory.IsIso (EtaleCounterexample.relativeFrobenius f p h)
+@EtaleCounterexample.etaleRelativeFrobeniusIso : {Y : AlgebraicGeometry.Scheme} →
+  (p : ℕ) →
+    [inst : Fact (Nat.Prime p)] →
+      (h : ↑p = 0) →
+        CategoryTheory.Functor.id Y.Etale ≅
+          EtaleCounterexample.etaleBaseChange (EtaleCounterexample.schemeFrobenius Y p h)
+@EtaleCounterexample.schemeFrobeniusEtaleDirectImageIso : {Y : AlgebraicGeometry.Scheme} →
+  (p : ℕ) →
+    [inst : Fact (Nat.Prime p)] →
+      (h : ↑p = 0) →
+        EtaleCounterexample.etaleDirectImage (EtaleCounterexample.schemeFrobenius Y p h) ≅
+          CategoryTheory.Functor.id (EtaleCounterexample.EtaleTopos Y)
+EtaleCounterexample.finiteType_uniform_pow_mem : ∀ (A B : Type u_1) [inst : CommRing A] [inst_1 : CommRing B]
+  [inst_2 : Algebra A B] (p : ℕ) [Fact (Nat.Prime p)] [CharP B p] [Algebra.FiniteType A B],
+  (∀ (b : B), ∃ n, b ^ p ^ n ∈ (algebraMap A B).range) → ∃ N, ∀ (b : B), b ^ p ^ N ∈ (algebraMap A B).range
+EtaleCounterexample.affineUH_frobeniusFactorization : ∀ (A B : Type u_1) [inst : CommRing A] [inst_1 : CommRing B]
+  [inst_2 : Algebra A B] (p : ℕ) [inst_3 : Fact (Nat.Prime p)] [inst_4 : CharP B p] [IsDomain A] [IsIntegrallyClosed A]
+  [inst_7 : CharP A p] [Algebra.FiniteType A B],
+  EtaleCounterexample.universalHomeomorphisms (AlgebraicGeometry.Spec.map (CommRingCat.ofHom (algebraMap A B))) →
+    ∃ n ψ, (algebraMap A B).comp ψ = iterateFrobenius B p n ∧ ψ.comp (algebraMap A B) = iterateFrobenius A p n
+EtaleCounterexample.affineUH_etaleDirectImage_isEquivalence : ∀ (A B : Type u_1) [inst : CommRing A] [IsDomain A]
+  [IsIntegrallyClosed A] [inst_3 : CommRing B] [inst_4 : Algebra A B] [Algebra.FiniteType A B] (p : ℕ)
+  [Fact (Nat.Prime p)] [CharP A p] [CharP B p],
+  EtaleCounterexample.universalHomeomorphisms (AlgebraicGeometry.Spec.map (CommRingCat.ofHom (algebraMap A B))) →
+    (EtaleCounterexample.etaleDirectImage
+        (AlgebraicGeometry.Spec.map (CommRingCat.ofHom (algebraMap A B)))).IsEquivalence
+EtaleCounterexample.multiplicativeGroupUH_etaleDirectImage_isEquivalence : ∀ (k : Type u_1) [inst : Field k] (p : ℕ)
+  [Fact (Nat.Prime p)] [CharP k p] (Z : EtaleCounterexample.FiniteTypeSchemes (AlgebraicGeometry.Spec ↧k))
+  (s : Z ⟶ EtaleCounterexample.multiplicativeGroupFiniteType k),
+  EtaleCounterexample.relativeUH (AlgebraicGeometry.Spec ↧k) s →
+    (EtaleCounterexample.etaleDirectImage s.left).IsEquivalence
+@EtaleCounterexample.relativeCompatible_comp_inverse : ∀ {E : Type u_1} {D : Type u_3} {B : Type u_5}
+  [inst : CategoryTheory.Category.{u_2, u_1} E] [inst_1 : CategoryTheory.Category.{u_4, u_3} D]
+  [inst_2 : CategoryTheory.Category.{u_6, u_5} B] {π : CategoryTheory.Functor E B} {ρ : CategoryTheory.Functor D B}
+  (f : EtaleCounterexample.RelativeMorphism π ρ) [inst_3 : f.geometric.directImage.IsEquivalence],
+  EtaleCounterexample.RelativeCompatible (f.comp f.equivalenceInverse)
+    (EtaleCounterexample.identityTwist π (CategoryTheory.Iso.refl (CategoryTheory.Functor.id B)))
+    f.geometric.directImage.asEquivalence.unitIso.symm
+@EtaleCounterexample.etalePointCompIso_composition : ∀ {X Y Z : AlgebraicGeometry.Scheme} {Ω : Type u_1}
+  [inst : Field Ω] [inst_1 : IsSepClosed Ω] (f : X ⟶ Y) (g : Y ⟶ Z) (s : AlgebraicGeometry.Spec ↧Ω ⟶ X)
+  {t : AlgebraicGeometry.Spec ↧Ω ⟶ Y} {r : AlgebraicGeometry.Spec ↧Ω ⟶ Z}
+  (hs : CategoryTheory.CategoryStruct.comp s f = t) (ht : CategoryTheory.CategoryStruct.comp t g = r) (M : Type u_1),
+  CategoryTheory.CategoryStruct.comp
+      ((EtaleCounterexample.etaleDirectImage g).map ((EtaleCounterexample.etalePointCompIsoOfEq f s hs).hom.app M))
+      ((EtaleCounterexample.etalePointCompIsoOfEq g t ht).hom.app M) =
+    CategoryTheory.CategoryStruct.comp
+      ((EtaleCounterexample.etaleDirectImageCompIso f g).hom.app ((EtaleCounterexample.etalePoint s).directImage.obj M))
+      ((EtaleCounterexample.etalePointCompIsoOfEq (CategoryTheory.CategoryStruct.comp f g) s ⋯).hom.app M)
+@EtaleCounterexample.relativeEtalePoint_comp_affineMorphism : ∀ {X Z : AlgebraicGeometry.Scheme} {Ω : Type u_1}
+  [inst : Field Ω] [inst_1 : IsSepClosed Ω] {R : CommRingCat} (f : X ⟶ AlgebraicGeometry.Spec R) (π : X ⟶ Z)
+  (ρ : AlgebraicGeometry.Spec R ⟶ Z) (hf : CategoryTheory.CategoryStruct.comp f ρ = π)
+  (s : AlgebraicGeometry.Spec ↧Ω ⟶ X) (t : AlgebraicGeometry.Spec ↧Ω ⟶ AlgebraicGeometry.Spec R)
+  (ω : AlgebraicGeometry.Spec ↧Ω ⟶ Z) (hs : CategoryTheory.CategoryStruct.comp s π = ω)
+  (ht : CategoryTheory.CategoryStruct.comp t ρ = ω) (hst : CategoryTheory.CategoryStruct.comp s f = t),
+  EtaleCounterexample.RelativeCompatible
+    ((EtaleCounterexample.relativeEtalePoint π s hs).comp (EtaleCounterexample.relativeAffineEtaleMorphism f π ρ hf))
+    (EtaleCounterexample.relativeEtalePoint ρ t ht) (EtaleCounterexample.etalePointCompIsoOfEq f s hst)
+EtaleCounterexample.multiplicativeGroupPoint_reconstruct : ∀ (k Ω : Type u_1) [inst : Field k] [inst_1 : Field Ω]
+  [inst_2 : Algebra k Ω] (s : AlgebraicGeometry.Spec ↧Ω ⟶ EtaleCounterexample.multiplicativeGroup k),
+  CategoryTheory.CategoryStruct.comp s (EtaleCounterexample.multiplicativeGroupStructure k) =
+      EtaleCounterexample.fieldGeometricPoint k Ω →
+    EtaleCounterexample.multiplicativeGroupPoint k Ω (EtaleCounterexample.multiplicativeGroupPointUnit k Ω s) = s
+EtaleCounterexample.relative_roof_twist_pointAction : ∀ (k : Type u_1) [inst : Field k] [inst_1 : Fintype k]
+  (Ω : Type u_1) [inst_2 : Field Ω] [IsAlgClosed Ω] [inst_4 : Algebra k Ω] [inst_5 : Algebra.IsAlgebraic k Ω]
+  (Z : EtaleCounterexample.FiniteTypeSchemes (AlgebraicGeometry.Spec ↧k))
+  (s f : Z ⟶ EtaleCounterexample.multiplicativeGroupFiniteType k)
+  (γ :
+    ((EtaleCounterexample.relativeMultiplicativeGroupMorphism k Z s).comp
+            (EtaleCounterexample.nonintegralTwist k
+              (EtaleCounterexample.multiplicativeGroupStructure k))).geometric.directImage ≅
+      (EtaleCounterexample.relativeMultiplicativeGroupMorphism k Z f).geometric.directImage),
+  EtaleCounterexample.RelativeCompatible
+      ((EtaleCounterexample.relativeMultiplicativeGroupMorphism k Z s).comp
+        (EtaleCounterexample.nonintegralTwist k (EtaleCounterexample.multiplicativeGroupStructure k)))
+      (EtaleCounterexample.relativeMultiplicativeGroupMorphism k Z f) γ →
+    ∀ (z : Ωˣ) (l : AlgebraicGeometry.Spec ↧Ω ⟶ Z.left),
+      CategoryTheory.CategoryStruct.comp l s.left = EtaleCounterexample.multiplicativeGroupPoint k Ω z →
+        (CommRingCat.Hom.hom (AlgebraicGeometry.Spec.preimage (CategoryTheory.CategoryStruct.comp l f.left)))
+            (LaurentPolynomial.T 1) =
+          (EtaleCounterexample.nonintegralFieldAutomorphism k Ω) ↑z
+EtaleCounterexample.nonintegralTwist_no_relative_roof : ∀ (k : Type u_1) [inst : Field k] [inst_1 : Fintype k]
+  (Ω : Type u_1) [inst_2 : Field Ω] [IsAlgClosed Ω] [inst_4 : Algebra k Ω] [Algebra.IsAlgebraic k Ω] (p : ℕ)
+  [Fact (Nat.Prime p)] [CharP k p] [CharP Ω p] (Z : EtaleCounterexample.FiniteTypeSchemes (AlgebraicGeometry.Spec ↧k))
+  (s f : Z ⟶ EtaleCounterexample.multiplicativeGroupFiniteType k),
+  EtaleCounterexample.relativeUH (AlgebraicGeometry.Spec ↧k) s →
+    ¬∃ γ,
+        EtaleCounterexample.RelativeCompatible
+          ((EtaleCounterexample.relativeMultiplicativeGroupMorphism k Z s).comp
+            (EtaleCounterexample.nonintegralTwist k (EtaleCounterexample.multiplicativeGroupStructure k)))
+          (EtaleCounterexample.relativeMultiplicativeGroupMorphism k Z f) γ
+EtaleCounterexample.localizedEndomorphism_has_etaleRealization : ∀ (k : Type u_1) [inst : Field k] (p : ℕ)
+  [Fact (Nat.Prime p)] [CharP k p]
+  (a :
+    (EtaleCounterexample.relativeUH (AlgebraicGeometry.Spec ↧k)).Q.obj
+        (EtaleCounterexample.multiplicativeGroupFiniteType k) ⟶
+      (EtaleCounterexample.relativeUH (AlgebraicGeometry.Spec ↧k)).Q.obj
+        (EtaleCounterexample.multiplicativeGroupFiniteType k)),
+  ∃ T, EtaleCounterexample.IsInducedByLocalizedEndomorphism k a T
+EtaleCounterexample.nonintegralTwist_not_any_localizedRoof : ∀ (k : Type u_1) [inst : Field k] (p : ℕ)
+  [inst_1 : Fact (Nat.Prime p)] [inst_2 : CharP k p] [inst_3 : Fintype k] (Ω : Type u_1) [inst_4 : Field Ω]
+  [IsAlgClosed Ω] [inst_6 : Algebra k Ω] [Algebra.IsAlgebraic k Ω] [CharP Ω p]
+  (a :
+    (EtaleCounterexample.relativeUH (AlgebraicGeometry.Spec ↧k)).Q.obj
+        (EtaleCounterexample.multiplicativeGroupFiniteType k) ⟶
+      (EtaleCounterexample.relativeUH (AlgebraicGeometry.Spec ↧k)).Q.obj
+        (EtaleCounterexample.multiplicativeGroupFiniteType k))
+  (r : EtaleCounterexample.MultiplicativeGroupLocalizedRoof k a),
+  ¬∃ γ,
+      EtaleCounterexample.RelativeCompatible
+        (EtaleCounterexample.nonintegralTwist k (EtaleCounterexample.multiplicativeGroupStructure k))
+        (EtaleCounterexample.MultiplicativeGroupLocalizedRoof.etaleMorphism k p r) γ
+EtaleCounterexample.ToposPointSpace : (E : Type u_2) →
+  [CategoryTheory.Category.{u_3, u_2} E] → Type (max (max (u_1 + 1) u_2) u_3)
+@EtaleCounterexample.geometricIdentity_isPinned : ∀ {E : Type u_2} [inst : CategoryTheory.Category.{u_3, u_2} E],
+  (EtaleCounterexample.GeometricMorphism.id E).IsPinned
+EtaleCounterexample.finiteField_counterexample_roofForm : ∀ (k : Type u_1) [inst : Field k] [Fintype k],
+  ∃ T,
+    EtaleCounterexample.IsRelativeEquivalence T ∧
+      T.geometric.IsPinned ∧
+        ∀
+          (a :
+            (EtaleCounterexample.relativeUH (AlgebraicGeometry.Spec ↧k)).Q.obj
+                (EtaleCounterexample.multiplicativeGroupFiniteType k) ⟶
+              (EtaleCounterexample.relativeUH (AlgebraicGeometry.Spec ↧k)).Q.obj
+                (EtaleCounterexample.multiplicativeGroupFiniteType k)),
+          ¬EtaleCounterexample.IsInducedByLocalizedEndomorphism k a T
+'EtaleCounterexample.etale_universalHomeomorphism_isIso' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.schemeFrobenius' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.schemeFrobenius_naturality' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.schemeFrobenius_universallyInjective' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.relativeFrobenius_isIso' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.etaleRelativeFrobeniusIso' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.schemeFrobeniusEtaleDirectImageIso' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.finiteType_uniform_pow_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.affineUH_frobeniusFactorization' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.affineUH_etaleDirectImage_isEquivalence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.multiplicativeGroupUH_etaleDirectImage_isEquivalence' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'EtaleCounterexample.relativeCompatible_comp_inverse' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.etalePointCompIso_composition' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.relativeEtalePoint_comp_affineMorphism' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.multiplicativeGroupPoint_reconstruct' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.relative_roof_twist_pointAction' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.nonintegralTwist_no_relative_roof' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.localizedEndomorphism_has_etaleRealization' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'EtaleCounterexample.nonintegralTwist_not_any_localizedRoof' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.ToposPointSpace' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.geometricIdentity_isPinned' depends on axioms: [propext, Classical.choice, Quot.sound]
+'EtaleCounterexample.finiteField_counterexample_roofForm' depends on axioms: [propext, Classical.choice, Quot.sound]
+@EtaleCounterexample.localizedFullyFaithful.{u_1, u_2, u_3, u_4, u_5, u_6, u_7,
+    u_8} : {C : Type u_1} →
+  {D : Type u_3} →
+    {C' : Type u_5} →
+      {D' : Type u_7} →
+        [inst : CategoryTheory.Category.{u_2, u_1} C] →
+          [inst_1 : CategoryTheory.Category.{u_4, u_3} D] →
+            [inst_2 : CategoryTheory.Category.{u_6, u_5} C'] →
+              [inst_3 : CategoryTheory.Category.{u_8, u_7} D'] →
+                {I : CategoryTheory.Functor.{u_2, u_4, u_1, u_3} C D} →
+                  {R : CategoryTheory.Functor.{u_4, u_2, u_3, u_1} D C} →
+                    CategoryTheory.Adjunction.{u_2, u_4, u_1, u_3} I R →
+                      [CategoryTheory.Functor.Full.{u_2, u_4, u_1, u_3} I] →
+                        [CategoryTheory.Functor.Faithful.{u_2, u_4, u_1, u_3} I] →
+                          (L : CategoryTheory.Functor.{u_2, u_6, u_1, u_5} C C') →
+                            (W : CategoryTheory.MorphismProperty.{u_2, u_1} C) →
+                              [CategoryTheory.Functor.IsLocalization.{u_2, u_1, u_6, u_5} L W] →
+                                (M : CategoryTheory.Functor.{u_4, u_8, u_3, u_7} D D') →
+                                  (V : CategoryTheory.MorphismProperty.{u_4, u_3} D) →
+                                    [CategoryTheory.Functor.IsLocalization.{u_4, u_3, u_8, u_7} M V] →
+                                      (I' : CategoryTheory.Functor.{u_6, u_8, u_5, u_7} C' D') →
+                                        (R' : CategoryTheory.Functor.{u_8, u_6, u_7, u_5} D' C') →
+                                          [CategoryTheory.CatCommSq.{u_2, u_1, u_4, u_3, u_6, u_5, u_8, u_7} I L M I'] →
+                                            [CategoryTheory.CatCommSq.{u_4, u_3, u_2, u_1, u_8, u_7, u_6, u_5} R M L
+                                                  R'] →
+                                              CategoryTheory.Functor.FullyFaithful.{u_6, u_8, u_5, u_7} I'
+@EtaleCounterexample.localizedInclusionFullyFaithful.{u_1} : {S T : AlgebraicGeometry.Scheme.{u_1}} →
+  (i : Quiver.Hom.{u_1, u_1 + 1} S T) →
+    [inst : AlgebraicGeometry.LocallyOfFiniteType.{u_1} i] →
+      [inst_1 : AlgebraicGeometry.QuasiCompact.{u_1} i] →
+        [CategoryTheory.Mono.{u_1, u_1 + 1} i] →
+          CategoryTheory.Functor.FullyFaithful.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+            (EtaleCounterexample.localizedInclusion.{u_1} i)
+EtaleCounterexample.primeFieldLocalizedHomEquiv : (p : ℕ) →
+  (X Y : EtaleCounterexample.LocalizedSchemes.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p))) →
+    Equiv.{2, 2} (Quiver.Hom.{1, 1} X Y)
+      (Quiver.Hom.{1, 1}
+        (CategoryTheory.Functor.obj.{1, 1, 1, 1}
+          (EtaleCounterexample.localizedInclusion.{0} (EtaleCounterexample.primeBase p)) X)
+        (CategoryTheory.Functor.obj.{1, 1, 1, 1}
+          (EtaleCounterexample.localizedInclusion.{0} (EtaleCounterexample.primeBase p)) Y))
+EtaleCounterexample.primeFieldFiniteTypeHomEquiv : (p : ℕ) →
+  (X Y : EtaleCounterexample.FiniteTypeSchemes.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p))) →
+    Equiv.{2, 2}
+      (Quiver.Hom.{1, 1}
+        (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+          (CategoryTheory.MorphismProperty.Q.{0, 1}
+            (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p))))
+          X)
+        (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+          (CategoryTheory.MorphismProperty.Q.{0, 1}
+            (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p))))
+          Y))
+      (Quiver.Hom.{1, 1}
+        (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+          (CategoryTheory.MorphismProperty.Q.{0, 1}
+            (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+          (CategoryTheory.Functor.obj.{0, 0, 1, 1} (EtaleCounterexample.inclusion.{0} (EtaleCounterexample.primeBase p))
+            X))
+        (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+          (CategoryTheory.MorphismProperty.Q.{0, 1}
+            (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+          (CategoryTheory.Functor.obj.{0, 0, 1, 1} (EtaleCounterexample.inclusion.{0} (EtaleCounterexample.primeBase p))
+            Y)))
+@EtaleCounterexample.identityTwist.{u_1, u_2, u_3,
+    u_4} : {E : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} E] →
+    {B : Type u_3} →
+      [inst_1 : CategoryTheory.Category.{u_4, u_3} B] →
+        (π : CategoryTheory.Functor.{u_2, u_4, u_1, u_3} E B) →
+          CategoryTheory.Iso.{max u_3 u_4, max u_3 u_4} (CategoryTheory.Functor.id.{u_4, u_3} B)
+              (CategoryTheory.Functor.id.{u_4, u_3} B) →
+            EtaleCounterexample.RelativeMorphism.{u_1, u_2, u_1, u_2, u_3, u_4} π π
+@EtaleCounterexample.relativeCompatible_reflected.{u_1, u_2, u_3, u_4, u_5, u_6, u_7,
+    u_8} : ∀ {E : Type u_1} {D : Type u_3} [inst : CategoryTheory.Category.{u_2, u_1} E]
+  [inst_1 : CategoryTheory.Category.{u_4, u_3} D] {B : Type u_5} [inst_2 : CategoryTheory.Category.{u_6, u_5} B]
+  {A : Type u_7} [inst_3 : CategoryTheory.Category.{u_8, u_7} A] (J : CategoryTheory.Functor.{u_6, u_8, u_5, u_7} B A)
+  [CategoryTheory.Functor.Faithful.{u_6, u_8, u_5, u_7} J] {π : CategoryTheory.Functor.{u_2, u_6, u_1, u_5} E B}
+  {ρ : CategoryTheory.Functor.{u_4, u_6, u_3, u_5} D B}
+  (f h : EtaleCounterexample.RelativeMorphism.{u_1, u_2, u_3, u_4, u_5, u_6} π ρ)
+  (γ :
+    CategoryTheory.Iso.{max u_1 u_4, max (max (max u_1 u_3) u_2) u_4}
+      (EtaleCounterexample.GeometricMorphism.directImage.{u_1, u_2, u_3, u_4}
+        (EtaleCounterexample.RelativeMorphism.geometric.{u_1, u_2, u_3, u_4, u_5, u_6} f))
+      (EtaleCounterexample.GeometricMorphism.directImage.{u_1, u_2, u_3, u_4}
+        (EtaleCounterexample.RelativeMorphism.geometric.{u_1, u_2, u_3, u_4, u_5, u_6} h))),
+  (∀ (X : E),
+      Eq.{u_8 + 1}
+        (CategoryTheory.CategoryStruct.comp.{u_8, u_7}
+          (CategoryTheory.Functor.map.{u_6, u_8, u_5, u_7} J
+            (CategoryTheory.Functor.map.{u_4, u_6, u_3, u_5} ρ
+              (CategoryTheory.NatTrans.app.{u_2, u_4, u_1, u_3}
+                (CategoryTheory.Iso.hom.{max u_1 u_4, max (max (max u_1 u_3) u_2) u_4} γ) X)))
+          (CategoryTheory.Functor.map.{u_6, u_8, u_5, u_7} J
+            (CategoryTheory.NatTrans.app.{u_2, u_6, u_1, u_5}
+              (CategoryTheory.Iso.hom.{max u_1 u_6, max (max (max u_1 u_5) u_2) u_6}
+                (EtaleCounterexample.RelativeMorphism.comparison.{u_1, u_2, u_3, u_4, u_5, u_6} h))
+              X)))
+        (CategoryTheory.Functor.map.{u_6, u_8, u_5, u_7} J
+          (CategoryTheory.NatTrans.app.{u_2, u_6, u_1, u_5}
+            (CategoryTheory.Iso.hom.{max u_1 u_6, max (max (max u_1 u_5) u_2) u_6}
+              (EtaleCounterexample.RelativeMorphism.comparison.{u_1, u_2, u_3, u_4, u_5, u_6} f))
+            X))) →
+    EtaleCounterexample.RelativeCompatible.{u_1, u_2, u_3, u_4, u_5, u_6} f h γ
+@EtaleCounterexample.centralActionIso.{u_1, u_2,
+    u_3} : {V : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} V] →
+    {G : Type u_3} →
+      [inst_1 : Group.{u_3} G] →
+        (g : G) →
+          (∀ (h : G), Eq.{u_3 + 1} (HMul.hMul.{u_3, u_3, u_3} g h) (HMul.hMul.{u_3, u_3, u_3} h g)) →
+            CategoryTheory.Iso.{max (max u_1 u_3) u_2, max (max u_1 u_3) u_2}
+              (CategoryTheory.Functor.id.{u_2, max (max u_3 u_1) u_2} (Action.{u_2, u_1, u_3} V G))
+              (CategoryTheory.Functor.id.{u_2, max (max u_3 u_1) u_2} (Action.{u_2, u_1, u_3} V G))
+@EtaleCounterexample.transportIdentityIso.{u_1, u_2, u_3,
+    u_4} : {E : Type u_1} →
+  {D : Type u_3} →
+    [inst : CategoryTheory.Category.{u_2, u_1} E] →
+      [inst_1 : CategoryTheory.Category.{u_4, u_3} D] →
+        CategoryTheory.Equivalence.{u_2, u_4, u_1, u_3} E D →
+          CategoryTheory.Iso.{max u_1 u_2, max u_1 u_2} (CategoryTheory.Functor.id.{u_2, u_1} E)
+              (CategoryTheory.Functor.id.{u_2, u_1} E) →
+            CategoryTheory.Iso.{max u_3 u_4, max u_3 u_4} (CategoryTheory.Functor.id.{u_4, u_3} D)
+              (CategoryTheory.Functor.id.{u_4, u_3} D)
+@EtaleCounterexample.rightMate_counit.{u_1, u_2, u_3,
+    u_4} : ∀ {E : Type u_1} {D : Type u_3} [inst : CategoryTheory.Category.{u_2, u_1} E]
+  [inst_1 : CategoryTheory.Category.{u_4, u_3} D] {Lz Lw : CategoryTheory.Functor.{u_2, u_4, u_1, u_3} E D}
+  {Rz Rw : CategoryTheory.Functor.{u_4, u_2, u_3, u_1} D E} (az : CategoryTheory.Adjunction.{u_2, u_4, u_1, u_3} Lz Rz)
+  (aw : CategoryTheory.Adjunction.{u_2, u_4, u_1, u_3} Lw Rw)
+  (θ : CategoryTheory.Iso.{max u_1 u_4, max (max (max u_1 u_3) u_2) u_4} Lw Lz) (X : D),
+  Eq.{u_4 + 1}
+    (CategoryTheory.CategoryStruct.comp.{u_4, u_3}
+      (CategoryTheory.Functor.map.{u_2, u_4, u_1, u_3} Lw
+        (CategoryTheory.NatTrans.app.{u_4, u_2, u_3, u_1}
+          (CategoryTheory.Iso.hom.{max u_3 u_2, max (max (max u_1 u_3) u_2) u_4}
+            ((CategoryTheory.conjugateIsoEquiv.{u_2, u_4, u_1, u_3} az aw) θ))
+          X))
+      (CategoryTheory.NatTrans.app.{u_4, u_4, u_3, u_3} (CategoryTheory.Adjunction.counit.{u_2, u_4, u_1, u_3} aw) X))
+    (CategoryTheory.CategoryStruct.comp.{u_4, u_3}
+      (CategoryTheory.NatTrans.app.{u_2, u_4, u_1, u_3}
+        (CategoryTheory.Iso.hom.{max u_1 u_4, max (max (max u_1 u_3) u_2) u_4} θ)
+        (CategoryTheory.Functor.obj.{u_4, u_2, u_3, u_1} Rz X))
+      (CategoryTheory.NatTrans.app.{u_4, u_4, u_3, u_3} (CategoryTheory.Adjunction.counit.{u_2, u_4, u_1, u_3} az) X))
+EtaleCounterexample.EtaleTopos.{u_1} : AlgebraicGeometry.Scheme.{u_1} → Type (u_1 + 1)
+@EtaleCounterexample.etalePoint.{u_1} : {X : AlgebraicGeometry.Scheme.{u_1}} →
+  {Ω : Type u_1} →
+    [inst : Field.{u_1} Ω] →
+      [IsSepClosed.{u_1} Ω] →
+        Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X →
+          EtaleCounterexample.GeometricMorphism.{u_1 + 1, u_1, u_1 + 1, u_1 + 1} (Type u_1)
+            (EtaleCounterexample.EtaleTopos.{u_1} X)
+@EtaleCounterexample.etaleFiberReindex.{u_1} : {X : AlgebraicGeometry.Scheme.{u_1}} →
+  {Ω : Type u_1} →
+    [inst : Field.{u_1} Ω] →
+      [inst_1 : IsSepClosed.{u_1} Ω] →
+        (e : CategoryTheory.Iso.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) (AlgebraicGeometry.Spec.{u_1} ↧Ω)) →
+          (s : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X) →
+            CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+              (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_1, u_1 + 1}
+                (AlgebraicGeometry.Scheme.pointSmallEtale.{u_1} s))
+              (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_1, u_1 + 1}
+                (AlgebraicGeometry.Scheme.pointSmallEtale.{u_1}
+                  (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (CategoryTheory.Iso.hom.{u_1, u_1 + 1} e) s)))
+@EtaleCounterexample.sheafFiberIso.{u_1, u_2,
+    u_3} : {C : Type u_2} →
+  [inst : CategoryTheory.Category.{u_3, u_2} C] →
+    {J : CategoryTheory.GrothendieckTopology.{u_3, u_2} C} →
+      {Φ Ψ : CategoryTheory.GrothendieckTopology.Point.{u_1, u_3, u_2} J} →
+        CategoryTheory.Iso.{max u_1 u_2, max (max (u_1 + 1) u_2) u_3}
+            (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_3, u_2} Φ)
+            (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_3, u_2} Ψ) →
+          CategoryTheory.Iso.{max (max (u_1 + 1) u_2) u_3, max (max (u_1 + 1) u_2) u_3}
+            (CategoryTheory.GrothendieckTopology.Point.sheafFiber.{u_1, u_3, u_1, u_2, u_1 + 1} Φ)
+            (CategoryTheory.GrothendieckTopology.Point.sheafFiber.{u_1, u_3, u_1, u_2, u_1 + 1} Ψ)
+@EtaleCounterexample.etalePointRightMate.{u_1} : {X : AlgebraicGeometry.Scheme.{u_1}} →
+  {Ω : Type u_1} →
+    [inst : Field.{u_1} Ω] →
+      [inst_1 : IsSepClosed.{u_1} Ω] →
+        (e : CategoryTheory.Iso.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) (AlgebraicGeometry.Spec.{u_1} ↧Ω)) →
+          (s : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X) →
+            CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+              (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                (EtaleCounterexample.etalePoint.{u_1}
+                  (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (CategoryTheory.Iso.hom.{u_1, u_1 + 1} e) s)))
+              (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                (EtaleCounterexample.etalePoint.{u_1} s))
+@EtaleCounterexample.laurent_isUnit_iff.{u_1} : ∀ {k : Type u_1} [inst : Field.{u_1} k] (f : LaurentPolynomial.{u_1} k),
+  IsUnit.{u_1} f ↔
+    ∃ c m,
+      Ne.{u_1 + 1} c 0 ∧
+        Eq.{u_1 + 1} f (HMul.hMul.{u_1, u_1, u_1} (LaurentPolynomial.C.{u_1} c) (LaurentPolynomial.T.{u_1} m))
+EtaleCounterexample.perfectLaurent_unit_from_stage.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ)
+  (u : Units.{u_1} (EtaleCounterexample.PerfectLaurent.{u_1} k p)),
+  ∃ d f, IsUnit.{u_1} f ∧ Eq.{u_1 + 1} ((EtaleCounterexample.laurentStage.{u_1} k p d) f) ↑u
+EtaleCounterexample.laurentStage_injective.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ),
+  Ne.{1} p 0 → ∀ (d : ℕ), Function.Injective.{u_1 + 1, u_1 + 1} ⇑(EtaleCounterexample.laurentStage.{u_1} k p d)
+EtaleCounterexample.rationalRealization_injective.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ)
+  (hp : Ne.{1} p 0), Function.Injective.{u_1 + 1, u_1 + 1} ⇑(EtaleCounterexample.rationalRealization.{u_1} k p hp)
+EtaleCounterexample.perfectLaurent_isUnit_iff_rational.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ)
+  (hp : Ne.{1} p 0) (f : EtaleCounterexample.PerfectLaurent.{u_1} k p),
+  IsUnit.{u_1} f ↔
+    ∃ c m d,
+      Ne.{u_1 + 1} c 0 ∧
+        Eq.{u_1 + 1} ((EtaleCounterexample.rationalRealization.{u_1} k p hp) f)
+          (AddMonoidAlgebra.single.{u_1, 0} (HDiv.hDiv.{0, 0, 0} (↑m) (HPow.hPow.{0, 0, 0} (↑p) d)) c)
+@EtaleCounterexample.exponents_eq_of_infinite.{u_1} : ∀ {K : Type u_1} [inst : Field.{u_1} K] {S : Set.{u_1} K},
+  Set.Infinite.{u_1} S →
+    (∀ (z : K), Membership.mem.{u_1, u_1} S z → Ne.{u_1 + 1} z 0) →
+      ∀ {m n : ℤ},
+        (∀ (z : K),
+            Membership.mem.{u_1, u_1} S z → Eq.{u_1 + 1} (HPow.hPow.{u_1, 0, u_1} z m) (HPow.hPow.{u_1, 0, u_1} z n)) →
+          Eq.{1} m n
+EtaleCounterexample.oddDegreeElements_nonzero_infinite.{u_1,
+  u_2} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [Finite.{u_1 + 1} k] (p : ℕ) [Fact (Nat.Prime p)] [CharP.{u_1} k p]
+  (Ω : Type u_2) [inst_4 : Field.{u_2} Ω] [Algebra.{u_1, u_2} k Ω] [IsAlgClosed.{u_2} Ω],
+  Set.Infinite.{u_2} (sdiff.{u_2} (EtaleCounterexample.oddDegreeElements.{u_1, u_2} k Ω) (singleton.{u_2, u_2} 0))
+EtaleCounterexample.quadratic_frobenius_moves.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [Finite.{u_1 + 1} k]
+  (p : ℕ) [inst_2 : Fact (Nat.Prime p)] [inst_3 : CharP.{u_1} k p],
+  ∃ z, Ne.{1} z 0 ∧ Ne.{1} (HPow.hPow.{0, 0, 0} z (Nat.card.{u_1} k)) z
+EtaleCounterexample.characteristic_two_quadratic_moves : ∃ z, Ne.{1} z 0 ∧ Ne.{1} (HPow.hPow.{0, 0, 0} z 2) z
+@EtaleCounterexample.no_monomial_of_infinite_fixed.{u_1} : ∀ {K : Type u_1} [inst : Field.{u_1} K]
+  (σ : RingEquiv.{u_1, u_1} K K) {S : Set.{u_1} K},
+  Set.Infinite.{u_1} S →
+    (∀ (z : K), Membership.mem.{u_1, u_1} S z → Ne.{u_1 + 1} z 0) →
+      (∀ (z : K), Membership.mem.{u_1, u_1} S z → Eq.{u_1 + 1} (σ z) z) →
+        (∃ z, Ne.{u_1 + 1} (σ z) z) →
+          ∀ (r : ℕ),
+            (Function.Injective.{u_1 + 1, u_1 + 1} fun z => HPow.hPow.{u_1, 0, u_1} z r) →
+              ¬∃ c m,
+                  ∀ (z : K),
+                    Ne.{u_1 + 1} z 0 →
+                      Eq.{u_1 + 1} (HPow.hPow.{u_1, 0, u_1} (σ z) r)
+                        (HMul.hMul.{u_1, u_1, u_1} c (HPow.hPow.{u_1, 0, u_1} z m))
+EtaleCounterexample.no_monomial_of_odd_fixed.{u_1,
+  u_2} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [Finite.{u_1 + 1} k] (p : ℕ) [Fact (Nat.Prime p)] [CharP.{u_1} k p]
+  (Ω : Type u_2) [inst_4 : Field.{u_2} Ω] [Algebra.{u_1, u_2} k Ω] [IsAlgClosed.{u_2} Ω] [CharP.{u_2} Ω p]
+  (σ : RingEquiv.{u_2, u_2} Ω Ω),
+  (∀ (z : Ω),
+      Membership.mem.{u_2, u_2} (EtaleCounterexample.oddDegreeElements.{u_1, u_2} k Ω) z → Eq.{u_2 + 1} (σ z) z) →
+    (∃ z, Ne.{u_2 + 1} (σ z) z) →
+      ∀ (d : ℕ),
+        ¬∃ c m,
+            ∀ (z : Ω),
+              Ne.{u_2 + 1} z 0 →
+                Eq.{u_2 + 1} (HPow.hPow.{u_2, 0, u_2} (σ z) (HPow.hPow.{0, 0, 0} p d))
+                  (HMul.hMul.{u_2, u_2, u_2} c (HPow.hPow.{u_2, 0, u_2} z m))
+'EtaleCounterexample.localizedFullyFaithful' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.localizedInclusionFullyFaithful' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.primeFieldLocalizedHomEquiv' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.primeFieldFiniteTypeHomEquiv' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.identityTwist' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.relativeCompatible_reflected' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.centralActionIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.transportIdentityIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.rightMate_counit' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.etalePoint' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.etaleFiberReindex' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.sheafFiberIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.etalePointRightMate' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.laurent_isUnit_iff' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.perfectLaurent_unit_from_stage' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.laurentStage_injective' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.rationalRealization_injective' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.perfectLaurent_isUnit_iff_rational' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.exponents_eq_of_infinite' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.oddDegreeElements_nonzero_infinite' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.quadratic_frobenius_moves' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.characteristic_two_quadratic_moves' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.no_monomial_of_infinite_fixed' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.no_monomial_of_odd_fixed' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@EtaleCounterexample.smallSourceLanEvaluation.{u_1,
+    u_2} : {C : Type u_1} →
+  [inst : CategoryTheory.SmallCategory.{u_1} C] →
+    {D : Type u_2} →
+      [inst_1 : CategoryTheory.Category.{u_1, u_2} D] →
+        (F : CategoryTheory.Functor.{u_1, u_1, u_1, u_2} C D) →
+          (X : D) →
+            CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+              (CategoryTheory.Functor.comp.{u_1, max u_2 u_1, u_1, u_1 + 1, max (max (max u_1 u_2) (u_1 + 1)) u_1,
+                  u_1 + 1}
+                (CategoryTheory.Functor.lan.{u_1, u_1, u_1, u_2, u_1, u_1 + 1} F)
+                (CategoryTheory.Functor.obj.{u_1, max (u_1 + 1) u_2, u_2, max (u_1 + 1) u_2}
+                  (CategoryTheory.evaluation.{u_1, u_1, u_2, u_1 + 1} D (Type u_1)) X))
+              (CategoryTheory.Functor.comp.{u_1, u_1, u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+                (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1, u_1 + 1}
+                  (CategoryTheory.Functor.whiskeringLeft.{u_1, u_1, u_1, u_1, u_1 + 1, u_1}
+                    (CategoryTheory.CostructuredArrow.{u_1, u_1, u_1, u_2} F X) C (Type u_1))
+                  (CategoryTheory.CostructuredArrow.proj.{u_1, u_1, u_1, u_2} F X))
+                CategoryTheory.Limits.colim.{u_1, u_1, u_1, u_1 + 1})
+@EtaleCounterexample.smallSourceLan_preservesFiniteLimits.{u_1,
+    u_2} : ∀ {C : Type u_1} [inst : CategoryTheory.SmallCategory.{u_1} C] {D : Type u_2}
+  [inst_1 : CategoryTheory.Category.{u_1, u_2} D] (F : CategoryTheory.Functor.{u_1, u_1, u_1, u_2} C D)
+  [CategoryTheory.RepresentablyFlat.{u_1, u_1, u_1, u_2} F],
+  CategoryTheory.Limits.PreservesFiniteLimits.{u_1, max u_1 u_2, u_1 + 1, max (u_1 + 1) u_2}
+    (CategoryTheory.Functor.lan.{u_1, u_1, u_1, u_2, u_1, u_1 + 1} (CategoryTheory.Functor.op.{u_1, u_1, u_1, u_2} F))
+@EtaleCounterexample.etaleBaseChange_coverPreserving.{u_1} : ∀ {X Y : AlgebraicGeometry.Scheme.{u_1}}
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y),
+  CategoryTheory.CoverPreserving.{u_1, u_1, u_1 + 1, u_1 + 1} (AlgebraicGeometry.Scheme.smallEtaleTopology.{u_1} Y)
+    (AlgebraicGeometry.Scheme.smallEtaleTopology.{u_1} X) (EtaleCounterexample.etaleBaseChange.{u_1} f)
+@EtaleCounterexample.affineBaseEtaleAdjunction.{u_1} : {X : AlgebraicGeometry.Scheme.{u_1}} →
+  {R : CommRingCat.{u_1}} →
+    (f : Quiver.Hom.{u_1, u_1 + 1} X (AlgebraicGeometry.Spec.{u_1} R)) →
+      CategoryTheory.Adjunction.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (EtaleCounterexample.affineBaseEtaleInverseImage.{u_1} f) (EtaleCounterexample.etaleDirectImage.{u_1} f)
+@EtaleCounterexample.affineBaseEtaleMorphism.{u_1} : {X : AlgebraicGeometry.Scheme.{u_1}} →
+  {R : CommRingCat.{u_1}} →
+    Quiver.Hom.{u_1, u_1 + 1} X (AlgebraicGeometry.Spec.{u_1} R) →
+      EtaleCounterexample.GeometricMorphism.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (EtaleCounterexample.EtaleTopos.{u_1} X) (EtaleCounterexample.EtaleTopos.{u_1} (AlgebraicGeometry.Spec.{u_1} R))
+EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} : (k : Type u_1) →
+  [inst : CommRing.{u_1} k] → EtaleCounterexample.FiniteTypeSchemes.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)
+EtaleCounterexample.multiplicativeGroupEtaleMorphism.{u_1} : (k : Type u_1) →
+  [inst : CommRing.{u_1} k] →
+    EtaleCounterexample.GeometricMorphism.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.EtaleTopos.{u_1} (EtaleCounterexample.multiplicativeGroup.{u_1} k))
+      (EtaleCounterexample.EtaleTopos.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k))
+@EtaleCounterexample.etalePointCompIso.{u_1} : {X Y : AlgebraicGeometry.Scheme.{u_1}} →
+  {Ω : Type u_1} →
+    [inst : Field.{u_1} Ω] →
+      [inst_1 : IsSepClosed.{u_1} Ω] →
+        (f : Quiver.Hom.{u_1, u_1 + 1} X Y) →
+          (s : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X) →
+            CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+              (CategoryTheory.Functor.comp.{u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+                (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                  (EtaleCounterexample.etalePoint.{u_1} s))
+                (EtaleCounterexample.etaleDirectImage.{u_1} f))
+              (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                (EtaleCounterexample.etalePoint.{u_1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} s f)))
+@EtaleCounterexample.etalePointRightMateOfEq.{u_1} : {X : AlgebraicGeometry.Scheme.{u_1}} →
+  {Ω : Type u_1} →
+    [inst : Field.{u_1} Ω] →
+      [inst_1 : IsSepClosed.{u_1} Ω] →
+        (e : CategoryTheory.Iso.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) (AlgebraicGeometry.Spec.{u_1} ↧Ω)) →
+          {s t : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X} →
+            Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (CategoryTheory.Iso.hom.{u_1, u_1 + 1} e) s)
+                t →
+              CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+                (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                  (EtaleCounterexample.etalePoint.{u_1} t))
+                (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                  (EtaleCounterexample.etalePoint.{u_1} s))
+@EtaleCounterexample.etalePointRightMate_base.{u_1} : ∀ {X Y : AlgebraicGeometry.Scheme.{u_1}} {Ω : Type u_1}
+  [inst : Field.{u_1} Ω] [inst_1 : IsSepClosed.{u_1} Ω]
+  (e : CategoryTheory.Iso.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) (AlgebraicGeometry.Spec.{u_1} ↧Ω))
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y) {s t : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X}
+  (h : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (CategoryTheory.Iso.hom.{u_1, u_1 + 1} e) s) t)
+  (M : Type u_1),
+  Eq.{u_1 + 2}
+    (CategoryTheory.CategoryStruct.comp.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.map.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} (EtaleCounterexample.etaleDirectImage.{u_1} f)
+        (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointRightMateOfEq.{u_1} e h)) M))
+      (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointCompIso.{u_1} f s)) M))
+    (CategoryTheory.CategoryStruct.comp.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointCompIso.{u_1} f t)) M)
+      (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointRightMateOfEq.{u_1} e ⋯)) M))
+@EtaleCounterexample.transportIdentityIso_inverse_map.{u_1, u_2, u_3,
+    u_4} : ∀ {E : Type u_1} {D : Type u_3} [inst : CategoryTheory.Category.{u_2, u_1} E]
+  [inst_1 : CategoryTheory.Category.{u_4, u_3} D] (e : CategoryTheory.Equivalence.{u_2, u_4, u_1, u_3} E D)
+  (η :
+    CategoryTheory.Iso.{max u_1 u_2, max u_1 u_2} (CategoryTheory.Functor.id.{u_2, u_1} E)
+      (CategoryTheory.Functor.id.{u_2, u_1} E))
+  (X : D),
+  Eq.{u_2 + 1}
+    (CategoryTheory.Functor.map.{u_4, u_2, u_3, u_1} (CategoryTheory.Equivalence.inverse.{u_2, u_4, u_1, u_3} e)
+      (CategoryTheory.NatTrans.app.{u_4, u_4, u_3, u_3}
+        (CategoryTheory.Iso.hom.{max u_3 u_4, max u_3 u_4}
+          (EtaleCounterexample.transportIdentityIso.{u_1, u_2, u_3, u_4} e η))
+        X))
+    (CategoryTheory.NatTrans.app.{u_2, u_2, u_1, u_1} (CategoryTheory.Iso.hom.{max u_1 u_2, max u_1 u_2} η)
+      (CategoryTheory.Functor.obj.{u_4, u_2, u_3, u_1} (CategoryTheory.Equivalence.inverse.{u_2, u_4, u_1, u_3} e) X))
+@EtaleCounterexample.inverseMate_twistTriangle.{u_1, u_2, u_3,
+    u_4} : ∀ {E : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} E] {B : Type u_3}
+  [inst_1 : CategoryTheory.Category.{u_4, u_3} B] (π : CategoryTheory.Functor.{u_2, u_4, u_1, u_3} E B) {s t : E}
+  {ω : B} (γ : CategoryTheory.Iso.{u_2, u_1} t s)
+  (cs : CategoryTheory.Iso.{u_4, u_3} (CategoryTheory.Functor.obj.{u_2, u_4, u_1, u_3} π s) ω)
+  (ct : CategoryTheory.Iso.{u_4, u_3} (CategoryTheory.Functor.obj.{u_2, u_4, u_1, u_3} π t) ω)
+  (η :
+    CategoryTheory.Iso.{max u_3 u_4, max u_3 u_4} (CategoryTheory.Functor.id.{u_4, u_3} B)
+      (CategoryTheory.Functor.id.{u_4, u_3} B)),
+  Eq.{u_4 + 1}
+      (CategoryTheory.CategoryStruct.comp.{u_4, u_3}
+        (CategoryTheory.Functor.map.{u_2, u_4, u_1, u_3} π (CategoryTheory.Iso.hom.{u_2, u_1} γ))
+        (CategoryTheory.Iso.hom.{u_4, u_3} cs))
+      (CategoryTheory.CategoryStruct.comp.{u_4, u_3} (CategoryTheory.Iso.hom.{u_4, u_3} ct)
+        (CategoryTheory.NatTrans.app.{u_4, u_4, u_3, u_3} (CategoryTheory.Iso.hom.{max u_3 u_4, max u_3 u_4} η) ω)) →
+    Eq.{u_4 + 1}
+      (CategoryTheory.CategoryStruct.comp.{u_4, u_3}
+        (CategoryTheory.Functor.map.{u_2, u_4, u_1, u_3} π (CategoryTheory.Iso.inv.{u_2, u_1} γ))
+        (CategoryTheory.Iso.hom.{u_4, u_3} ct))
+      (CategoryTheory.CategoryStruct.comp.{u_4, u_3}
+        (CategoryTheory.NatTrans.app.{u_4, u_4, u_3, u_3} (CategoryTheory.Iso.inv.{max u_3 u_4, max u_3 u_4} η)
+          (CategoryTheory.Functor.obj.{u_2, u_4, u_1, u_3} π s))
+        (CategoryTheory.Iso.hom.{u_4, u_3} cs))
+EtaleCounterexample.finiteEtaleAffineEquivalence.{u_1} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    CategoryTheory.Equivalence.{u_1, u_1, u_1 + 1, u_1 + 1} (Opposite.{u_1 + 2} (CommAlgCat.FiniteEtale.{u_1, u_1} k))
+      (AlgebraicGeometry.Scheme.AffineEtale.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k))
+EtaleCounterexample.finiteEtaleSheafEquivalence.{u_1} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    CategoryTheory.Equivalence.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (CategoryTheory.Sheaf.{u_1, u_1, u_1 + 1, u_1 + 1} (EtaleCounterexample.finiteEtaleTopology.{u_1} k) (Type u_1))
+      (EtaleCounterexample.EtaleTopos.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k))
+EtaleCounterexample.finiteEtaleFrobenius.{u_1} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [Fintype.{u_1} k] →
+      (A : CommAlgCat.FiniteEtale.{u_1, u_1} k) →
+        AlgEquiv.{u_1, u_1, u_1} k ↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u_1, u_1 + 1} A)
+          ↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u_1, u_1 + 1} A)
+EtaleCounterexample.finiteFieldFrobeniusToposIso.{u_1} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [Fintype.{u_1} k] →
+      CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+        (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.EtaleTopos.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.EtaleTopos.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+EtaleCounterexample.finiteEtaleLiftEquiv.{u_1} : (k Ω : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [inst_1 : Field.{u_1} Ω] →
+      [inst_2 : IsSepClosed.{u_1} Ω] →
+        [inst_3 : Algebra.{u_1, u_1} k Ω] →
+          (A : CommAlgCat.FiniteEtale.{u_1, u_1} k) →
+            Equiv.{u_1 + 1, u_1 + 1}
+              (CategoryTheory.Functor.obj.{u_1, u_1, u_1 + 1, u_1 + 1}
+                (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_1, u_1 + 1}
+                  (AlgebraicGeometry.Scheme.pointSmallEtale.{u_1} (EtaleCounterexample.fieldGeometricPoint.{u_1} k Ω)))
+                (EtaleCounterexample.finiteEtaleScheme.{u_1} k (Opposite.op.{u_1 + 2} A)))
+              (AlgHom.{u_1, u_1, u_1} k (↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u_1, u_1 + 1} A)) Ω)
+EtaleCounterexample.finiteEtaleGeometricFiberIso.{u_1} : (k Ω : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [inst_1 : Field.{u_1} Ω] →
+      [inst_2 : IsSepClosed.{u_1} Ω] →
+        [inst_3 : Algebra.{u_1, u_1} k Ω] →
+          CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+            (CategoryTheory.Functor.comp.{u_1, u_1, u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+              (EtaleCounterexample.finiteEtaleSpec.{u_1} k)
+              (CategoryTheory.Functor.comp.{u_1, u_1, u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+                (AlgebraicGeometry.Scheme.AffineEtale.Spec.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k))
+                (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_1, u_1 + 1}
+                  (AlgebraicGeometry.Scheme.pointSmallEtale.{u_1}
+                    (EtaleCounterexample.fieldGeometricPoint.{u_1} k Ω)))))
+            (CategoryTheory.Functor.comp.{u_1, u_1, u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+              (CommAlgCat.FiniteEtale.fiber.{u_1, u_1, u_1} k Ω)
+              (CategoryTheory.forget.{u_1, u_1, u_1 + 1, u_1} FintypeCat.{u_1}))
+EtaleCounterexample.frobeniusPointMate_eq_toposIso.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : IsSepClosed.{u_1} Ω] [inst_3 : Algebra.{u_1, u_1} k Ω] [inst_4 : Fintype.{u_1} k]
+  [inst_5 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] (M : Type u_1),
+  Eq.{u_1 + 2}
+    (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1}
+        (EtaleCounterexample.etalePointRightMateOfEq.{u_1} (EtaleCounterexample.arithmeticFrobeniusSpec.{u_1} k Ω) ⋯))
+      M)
+    (CategoryTheory.NatTrans.app.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.finiteFieldFrobeniusToposIso.{u_1} k))
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.etalePoint.{u_1} (EtaleCounterexample.fieldGeometricPoint.{u_1} k Ω)))
+        M))
+@EtaleCounterexample.relativeEtalePoint.{u_1} : {X Y : AlgebraicGeometry.Scheme.{u_1}} →
+  {Ω : Type u_1} →
+    [inst : Field.{u_1} Ω] →
+      [inst_1 : IsSepClosed.{u_1} Ω] →
+        (f : Quiver.Hom.{u_1, u_1 + 1} X Y) →
+          (s : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X) →
+            {ω : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) Y} →
+              Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} s f) ω →
+                EtaleCounterexample.RelativeMorphism.{u_1 + 1, u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+                  (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                    (EtaleCounterexample.etalePoint.{u_1} ω))
+                  (EtaleCounterexample.etaleDirectImage.{u_1} f)
+@EtaleCounterexample.etalePointRightMate_fixedBase.{u_1} : ∀ {X Y : AlgebraicGeometry.Scheme.{u_1}} {Ω : Type u_1}
+  [inst : Field.{u_1} Ω] [inst_1 : IsSepClosed.{u_1} Ω]
+  (e : CategoryTheory.Iso.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) (AlgebraicGeometry.Spec.{u_1} ↧Ω))
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y) {s t : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X}
+  (h : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (CategoryTheory.Iso.hom.{u_1, u_1 + 1} e) s) t)
+  {ω ω' : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) Y}
+  (hs : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} s f) ω)
+  (ht : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} t f) ω')
+  (he : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (CategoryTheory.Iso.hom.{u_1, u_1 + 1} e) ω) ω')
+  (M : Type u_1),
+  Eq.{u_1 + 2}
+    (CategoryTheory.CategoryStruct.comp.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.map.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} (EtaleCounterexample.etaleDirectImage.{u_1} f)
+        (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointRightMateOfEq.{u_1} e h)) M))
+      (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointCompIsoOfEq.{u_1} f s hs)) M))
+    (CategoryTheory.CategoryStruct.comp.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointCompIsoOfEq.{u_1} f t ht)) M)
+      (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointRightMateOfEq.{u_1} e he)) M))
+@EtaleCounterexample.relativePointAction_of_baseEquation.{u_1} : ∀ {X Y : AlgebraicGeometry.Scheme.{u_1}} {Ω : Type u_1}
+  [inst : Field.{u_1} Ω] [inst_1 : IsSepClosed.{u_1} Ω]
+  (e : CategoryTheory.Iso.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) (AlgebraicGeometry.Spec.{u_1} ↧Ω))
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y) (s : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X)
+  {ω : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) Y}
+  (hs : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} s f) ω)
+  (he : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (CategoryTheory.Iso.hom.{u_1, u_1 + 1} e) ω) ω)
+  (η :
+    CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1} (EtaleCounterexample.EtaleTopos.{u_1} Y))
+      (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1} (EtaleCounterexample.EtaleTopos.{u_1} Y))),
+  (∀ (M : Type u_1),
+      Eq.{u_1 + 2}
+        (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointRightMateOfEq.{u_1} e he)) M)
+        (CategoryTheory.NatTrans.app.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} η)
+          (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+            (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+              (EtaleCounterexample.etalePoint.{u_1} ω))
+            M))) →
+    EtaleCounterexample.RelativeCompatible.{u_1 + 1, u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.twistRelativeEtalePoint.{u_1} f s hs (CategoryTheory.Iso.symm.{u_1 + 1, u_1 + 1} η))
+      (EtaleCounterexample.relativeEtalePoint.{u_1} f
+        (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (CategoryTheory.Iso.hom.{u_1, u_1 + 1} e) s) ⋯)
+      (CategoryTheory.Iso.symm.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etalePointRightMateOfEq.{u_1} e ⋯))
+@EtaleCounterexample.arithmeticFrobeniusTwist.{u_1} : {X : AlgebraicGeometry.Scheme.{u_1}} →
+  (k : Type u_1) →
+    [inst : Field.{u_1} k] →
+      [Fintype.{u_1} k] →
+        (f : Quiver.Hom.{u_1, u_1 + 1} X (AlgebraicGeometry.Spec.{u_1} ↧k)) →
+          EtaleCounterexample.RelativeMorphism.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+            (EtaleCounterexample.etaleDirectImage.{u_1} f) (EtaleCounterexample.etaleDirectImage.{u_1} f)
+@EtaleCounterexample.arithmeticFrobenius_relativePointAction.{u_1} : ∀ {X : AlgebraicGeometry.Scheme.{u_1}}
+  {Ω : Type u_1} [inst : Field.{u_1} Ω] [inst_1 : IsSepClosed.{u_1} Ω] (k : Type u_1) [inst_2 : Field.{u_1} k]
+  [inst_3 : Fintype.{u_1} k] [inst_4 : Algebra.{u_1, u_1} k Ω] [inst_5 : Algebra.IsAlgebraic.{u_1, u_1} k Ω]
+  (f : Quiver.Hom.{u_1, u_1 + 1} X (AlgebraicGeometry.Spec.{u_1} ↧k))
+  (s : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X)
+  (hs :
+    Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} s f)
+      (EtaleCounterexample.fieldGeometricPoint.{u_1} k Ω)),
+  EtaleCounterexample.RelativeCompatible.{u_1 + 1, u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.twistRelativeEtalePoint.{u_1} f s hs
+      (CategoryTheory.Iso.symm.{u_1 + 1, u_1 + 1} (EtaleCounterexample.finiteFieldFrobeniusToposIso.{u_1} k)))
+    (EtaleCounterexample.relativeEtalePoint.{u_1} f
+      (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1, u_1 + 1} (EtaleCounterexample.arithmeticFrobeniusSpec.{u_1} k Ω)) s)
+      ⋯)
+    (CategoryTheory.Iso.symm.{u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.etalePointRightMateOfEq.{u_1} (EtaleCounterexample.arithmeticFrobeniusSpec.{u_1} k Ω) ⋯))
+EtaleCounterexample.multiplicativeGroupPoint_frobenius.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : Algebra.{u_1, u_1} k Ω] [inst_3 : Fintype.{u_1} k]
+  [inst_4 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] (z : Units.{u_1} Ω),
+  Eq.{u_1 + 1}
+    (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1}
+      (CategoryTheory.Iso.hom.{u_1, u_1 + 1} (EtaleCounterexample.arithmeticFrobeniusSpec.{u_1} k Ω))
+      (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω z))
+    (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω (HPow.hPow.{u_1, 0, u_1} z (Fintype.card.{u_1} k)))
+EtaleCounterexample.multiplicativeGroup_relativeFrobeniusPointAction.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : Algebra.{u_1, u_1} k Ω] [inst_3 : Fintype.{u_1} k]
+  [Algebra.IsAlgebraic.{u_1, u_1} k Ω] [inst_5 : IsSepClosed.{u_1} Ω] (z : Units.{u_1} Ω),
+  ∃ γ,
+    EtaleCounterexample.RelativeCompatible.{u_1 + 1, u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.twistRelativeEtalePoint.{u_1} (EtaleCounterexample.multiplicativeGroupStructure.{u_1} k)
+        (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω z) ⋯
+        (CategoryTheory.Iso.symm.{u_1 + 1, u_1 + 1} (EtaleCounterexample.finiteFieldFrobeniusToposIso.{u_1} k)))
+      (EtaleCounterexample.relativeEtalePoint.{u_1} (EtaleCounterexample.multiplicativeGroupStructure.{u_1} k)
+        (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω (HPow.hPow.{u_1, 0, u_1} z (Fintype.card.{u_1} k))) ⋯)
+      γ
+'EtaleCounterexample.smallSourceLanEvaluation' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.smallSourceLan_preservesFiniteLimits' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.etaleBaseChange_coverPreserving' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.affineBaseEtaleAdjunction' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.affineBaseEtaleMorphism' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.multiplicativeGroupFiniteType' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.multiplicativeGroupEtaleMorphism' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.etalePointCompIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.etalePointRightMateOfEq' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.etalePointRightMate_base' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.transportIdentityIso_inverse_map' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.inverseMate_twistTriangle' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleAffineEquivalence' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleSheafEquivalence' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleFrobenius' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteFieldFrobeniusToposIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleLiftEquiv' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleGeometricFiberIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.frobeniusPointMate_eq_toposIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.relativeEtalePoint' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.etalePointRightMate_fixedBase' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.relativePointAction_of_baseEquation' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.arithmeticFrobeniusTwist' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.arithmeticFrobenius_relativePointAction' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.multiplicativeGroupPoint_frobenius' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.multiplicativeGroup_relativeFrobeniusPointAction' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@EtaleCounterexample.centralFiniteContinuousActionIso.{u_1} : {G : Type u_1} →
+  [inst : Group.{u_1} G] →
+    [inst_1 : TopologicalSpace.{u_1} G] →
+      (g : G) →
+        (∀ (h : G), Eq.{u_1 + 1} (HMul.hMul.{u_1, u_1, u_1} g h) (HMul.hMul.{u_1, u_1, u_1} h g)) →
+          CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+            (CategoryTheory.Functor.id.{u_1, u_1 + 1} (ContAction.{u_1, u_1 + 1, u_1, u_1, u_1} FintypeCat.{u_1} G))
+            (CategoryTheory.Functor.id.{u_1, u_1 + 1} (ContAction.{u_1, u_1 + 1, u_1, u_1, u_1} FintypeCat.{u_1} G))
+EtaleCounterexample.finiteEtaleGaloisAction_continuous.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : Algebra.{u_1, u_1} k Ω] [Finite.{u_1 + 1} k] [Algebra.IsAlgebraic.{u_1, u_1} k Ω]
+  (A : CommAlgCat.FiniteEtale.{u_1, u_1} k),
+  Action.IsContinuous.{u_1, u_1 + 1, u_1, u_1, u_1} (EtaleCounterexample.finiteEtaleGaloisAction.{u_1} k Ω A)
+EtaleCounterexample.finiteEtaleContinuousGaloisFunctor.{u_1} : (k Ω : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [inst_1 : Field.{u_1} Ω] →
+      [inst_2 : Algebra.{u_1, u_1} k Ω] →
+        [Finite.{u_1 + 1} k] →
+          [Algebra.IsAlgebraic.{u_1, u_1} k Ω] →
+            CategoryTheory.Functor.{u_1, u_1, u_1 + 1, u_1 + 1}
+              (Opposite.{u_1 + 2} (CommAlgCat.FiniteEtale.{u_1, u_1} k))
+              (ContAction.{u_1, u_1 + 1, u_1, u_1, u_1} FintypeCat.{u_1} Gal(Ω/k))
+EtaleCounterexample.finiteEtaleContinuousGeometricFiberIso.{u_1} : (k Ω : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [inst_1 : Field.{u_1} Ω] →
+      [inst_2 : Algebra.{u_1, u_1} k Ω] →
+        [inst_3 : Finite.{u_1 + 1} k] →
+          [inst_4 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] →
+            [inst_5 : IsSepClosed.{u_1} Ω] →
+              CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+                (CategoryTheory.Functor.comp.{u_1, u_1, u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+                  (EtaleCounterexample.finiteEtaleSpec.{u_1} k)
+                  (CategoryTheory.Functor.comp.{u_1, u_1, u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+                    (AlgebraicGeometry.Scheme.AffineEtale.Spec.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k))
+                    (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_1, u_1 + 1}
+                      (AlgebraicGeometry.Scheme.pointSmallEtale.{u_1}
+                        (EtaleCounterexample.fieldGeometricPoint.{u_1} k Ω)))))
+                (CategoryTheory.Functor.comp.{u_1, u_1, u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+                  (EtaleCounterexample.finiteEtaleContinuousGaloisFunctor.{u_1} k Ω)
+                  (CategoryTheory.forget.{u_1, u_1, u_1 + 1, u_1}
+                    (ContAction.{u_1, u_1 + 1, u_1, u_1, u_1} FintypeCat.{u_1} Gal(Ω/k))))
+EtaleCounterexample.arithmeticFrobenius_central.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : Algebra.{u_1, u_1} k Ω] [inst_3 : Algebra.IsAlgebraic.{u_1, u_1} k Ω]
+  [inst_4 : Fintype.{u_1} k] (σ : Gal(Ω/k)),
+  Eq.{u_1 + 1} (HMul.hMul.{u_1, u_1, u_1} (FiniteField.frobeniusAlgEquivOfAlgebraic.{u_1, u_1} k Ω) σ)
+    (HMul.hMul.{u_1, u_1, u_1} σ (FiniteField.frobeniusAlgEquivOfAlgebraic.{u_1, u_1} k Ω))
+EtaleCounterexample.finiteEtaleGaloisAction_frobenius.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : Algebra.{u_1, u_1} k Ω] [inst_3 : Algebra.IsAlgebraic.{u_1, u_1} k Ω]
+  [inst_4 : Fintype.{u_1} k] (A : CommAlgCat.FiniteEtale.{u_1, u_1} k)
+  (a : AlgHom.{u_1, u_1, u_1} k (↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u_1, u_1 + 1} A)) Ω),
+  Eq.{u_1 + 1}
+    ((CategoryTheory.ConcreteCategory.hom.{u_1, u_1, u_1 + 1, u_1}
+        ((Action.ρ.{u_1, u_1 + 1, u_1} (EtaleCounterexample.finiteEtaleGaloisAction.{u_1} k Ω A))
+          (FiniteField.frobeniusAlgEquivOfAlgebraic.{u_1, u_1} k Ω)))
+      a)
+    (AlgHom.comp.{u_1, u_1, u_1, u_1} a ↑(EtaleCounterexample.finiteEtaleFrobenius.{u_1} k A))
+EtaleCounterexample.finiteEtaleBaseChange_faithful.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : Algebra.{u_1, u_1} k Ω],
+  CategoryTheory.Functor.Faithful.{u_1, u_1, u_1 + 1, u_1 + 1} (CommAlgCat.FiniteEtale.baseChange.{u_1, u_1, u_1} k Ω)
+EtaleCounterexample.finiteEtaleFiber_faithful.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k] [inst_1 : Field.{u_1} Ω]
+  [inst_2 : Algebra.{u_1, u_1} k Ω] [IsSepClosed.{u_1} Ω],
+  CategoryTheory.Functor.Faithful.{u_1, u_1, u_1 + 1, u_1 + 1} (CommAlgCat.FiniteEtale.fiber.{u_1, u_1, u_1} k Ω)
+EtaleCounterexample.finiteEtaleContinuousGaloisFunctor_faithful.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : Algebra.{u_1, u_1} k Ω] [inst_3 : Finite.{u_1 + 1} k]
+  [inst_4 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] [IsSepClosed.{u_1} Ω],
+  CategoryTheory.Functor.Faithful.{u_1, u_1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.finiteEtaleContinuousGaloisFunctor.{u_1} k Ω)
+'EtaleCounterexample.centralFiniteContinuousActionIso' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleGaloisAction_continuous' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleContinuousGaloisFunctor' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleContinuousGeometricFiberIso' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.arithmeticFrobenius_central' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleGaloisAction_frobenius' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleBaseChange_faithful' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleFiber_faithful' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleContinuousGaloisFunctor_faithful' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@EtaleCounterexample.twoPrimaryResidue_compatible : ∀ {m n : ℕ},
+  Ne.{1} m 0 →
+    Ne.{1} n 0 →
+      Dvd.dvd.{0} m n → EtaleCounterexample.twoPrimaryResidue n ≡ EtaleCounterexample.twoPrimaryResidue m [MOD m]
+EtaleCounterexample.twoPrimaryExponent : EtaleCounterexample.CompatibleResidues
+EtaleCounterexample.twoPrimaryExponent_odd : ∀ (n : ℕ+),
+  Odd.{0} ↑n → Eq.{1} (↑EtaleCounterexample.twoPrimaryExponent n) 0
+EtaleCounterexample.twoPrimaryExponent_two_power : ∀ (r : ℕ),
+  Eq.{1} (↑EtaleCounterexample.twoPrimaryExponent (Subtype.mk.{1} (HPow.hPow.{0, 0, 0} 2 r) ⋯)) 1
+EtaleCounterexample.twoPrimaryExponent_not_integral : ∀ (z : ℤ),
+  Ne.{1} EtaleCounterexample.twoPrimaryExponent (EtaleCounterexample.integralExponent z)
+@EtaleCounterexample.twoPrimaryAlgHom.{u_1,
+    u_2} : {A : Type u_1} →
+  {k : Type u_2} →
+    [inst : CommRing.{u_2} k] →
+      [inst_1 : CommRing.{u_1} A] →
+        [inst_2 : Algebra.{u_2, u_1} k A] →
+          (F : AlgHom.{u_2, u_1, u_1} k A A) →
+            (∀ (x : A), ∃ n, Ne.{1} n 0 ∧ Function.IsPeriodicPt.{u_1} (⇑F) n x) → AlgHom.{u_2, u_1, u_1} k A A
+EtaleCounterexample.finiteFieldFrobenius_locallyPeriodic.{u_1,
+  u_2} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [inst_1 : Fintype.{u_1} k] (Ω : Type u_2) [inst_2 : Field.{u_2} Ω]
+  [inst_3 : Algebra.{u_1, u_2} k Ω] [Algebra.IsAlgebraic.{u_1, u_2} k Ω] (x : Ω),
+  ∃ n, Ne.{1} n 0 ∧ Function.IsPeriodicPt.{u_2} (⇑(FiniteField.frobeniusAlgHom.{u_1, u_2} k Ω)) n x
+EtaleCounterexample.nonintegralFieldAutomorphism.{u_1,
+  u_2} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [Fintype.{u_1} k] →
+      (Ω : Type u_2) →
+        [inst_2 : Field.{u_2} Ω] → [inst_3 : Algebra.{u_1, u_2} k Ω] → [Algebra.IsAlgebraic.{u_1, u_2} k Ω] → Gal(Ω/k)
+EtaleCounterexample.nonintegralFieldAutomorphism_period.{u_1,
+  u_2} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [inst_1 : Fintype.{u_1} k] (Ω : Type u_2) [inst_2 : Field.{u_2} Ω]
+  [inst_3 : Algebra.{u_1, u_2} k Ω] [inst_4 : Algebra.IsAlgebraic.{u_1, u_2} k Ω] {n : ℕ},
+  Ne.{1} n 0 →
+    ∀ (z : Ω),
+      Eq.{u_2 + 1} (HPow.hPow.{u_2, 0, u_2} z (HPow.hPow.{0, 0, 0} (Fintype.card.{u_1} k) n)) z →
+        Eq.{u_2 + 1} ((EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_2} k Ω) z)
+          (HPow.hPow.{u_2, 0, u_2} z
+            (HPow.hPow.{0, 0, 0} (Fintype.card.{u_1} k) (EtaleCounterexample.twoPrimaryResidue n)))
+EtaleCounterexample.nonintegralFieldAutomorphism_odd_fixed.{u_1,
+  u_2} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [inst_1 : Fintype.{u_1} k] (Ω : Type u_2) [inst_2 : Field.{u_2} Ω]
+  [inst_3 : Algebra.{u_1, u_2} k Ω] [inst_4 : Algebra.IsAlgebraic.{u_1, u_2} k Ω] (z : Ω),
+  Membership.mem.{u_2, u_2} (EtaleCounterexample.oddDegreeElements.{u_1, u_2} k Ω) z →
+    Eq.{u_2 + 1} ((EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_2} k Ω) z) z
+EtaleCounterexample.nonintegralFieldAutomorphism_quadratic.{u_1,
+  u_2} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [inst_1 : Fintype.{u_1} k] (Ω : Type u_2) [inst_2 : Field.{u_2} Ω]
+  [inst_3 : Algebra.{u_1, u_2} k Ω] [inst_4 : Algebra.IsAlgebraic.{u_1, u_2} k Ω] (z : Ω),
+  Eq.{u_2 + 1} (HPow.hPow.{u_2, 0, u_2} z (HPow.hPow.{0, 0, 0} (Nat.card.{u_1} k) 2)) z →
+    Eq.{u_2 + 1} ((EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_2} k Ω) z)
+      (HPow.hPow.{u_2, 0, u_2} z (Nat.card.{u_1} k))
+EtaleCounterexample.nonintegralFieldAutomorphism_central.{u_1,
+  u_2} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [inst_1 : Fintype.{u_1} k] (Ω : Type u_2) [inst_2 : Field.{u_2} Ω]
+  [inst_3 : Algebra.{u_1, u_2} k Ω] [inst_4 : Algebra.IsAlgebraic.{u_1, u_2} k Ω] (τ : Gal(Ω/k)),
+  Eq.{u_2 + 1} (HMul.hMul.{u_2, u_2, u_2} (EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_2} k Ω) τ)
+    (HMul.hMul.{u_2, u_2, u_2} τ (EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_2} k Ω))
+EtaleCounterexample.nonintegralFieldAutomorphism_moves.{u_1,
+  u_2} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [inst_1 : Fintype.{u_1} k] (Ω : Type u_2) [inst_2 : Field.{u_2} Ω]
+  [inst_3 : Algebra.{u_1, u_2} k Ω] [inst_4 : Algebra.IsAlgebraic.{u_1, u_2} k Ω] (p : ℕ) [Fact (Nat.Prime p)]
+  [CharP.{u_1} k p] [IsAlgClosed.{u_2} Ω],
+  ∃ z, Ne.{u_2 + 1} ((EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_2} k Ω) z) z
+EtaleCounterexample.nonintegralFieldAutomorphism_no_monomial.{u_1,
+  u_2} : ∀ (k : Type u_1) [inst : Field.{u_1} k] [inst_1 : Fintype.{u_1} k] (Ω : Type u_2) [inst_2 : Field.{u_2} Ω]
+  [inst_3 : Algebra.{u_1, u_2} k Ω] [inst_4 : Algebra.IsAlgebraic.{u_1, u_2} k Ω] (p : ℕ) [Fact (Nat.Prime p)]
+  [CharP.{u_1} k p] [IsAlgClosed.{u_2} Ω] [CharP.{u_2} Ω p] (d : ℕ),
+  ¬∃ c m,
+      ∀ (z : Ω),
+        Ne.{u_2 + 1} z 0 →
+          Eq.{u_2 + 1}
+            (HPow.hPow.{u_2, 0, u_2} ((EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_2} k Ω) z)
+              (HPow.hPow.{0, 0, 0} p d))
+            (HMul.hMul.{u_2, u_2, u_2} c (HPow.hPow.{u_2, 0, u_2} z m))
+EtaleCounterexample.nonintegralFieldAutomorphism_unique.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k] [inst_2 : Field.{u_1} Ω] [inst_3 : Algebra.{u_1, u_1} k Ω]
+  [inst_4 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] (σ : Gal(Ω/k)),
+  (∀ (n : ℕ),
+      Ne.{1} n 0 →
+        ∀ (z : Ω),
+          Eq.{u_1 + 1} (HPow.hPow.{u_1, 0, u_1} z (HPow.hPow.{0, 0, 0} (Fintype.card.{u_1} k) n)) z →
+            Eq.{u_1 + 1} (σ z)
+              (HPow.hPow.{u_1, 0, u_1} z
+                (HPow.hPow.{0, 0, 0} (Fintype.card.{u_1} k) (EtaleCounterexample.twoPrimaryResidue n)))) →
+    Eq.{u_1 + 1} σ (EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_1} k Ω)
+EtaleCounterexample.finiteEtaleNonintegralAutomorphism_natural.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k] (A B : CommAlgCat.FiniteEtale.{u_1, u_1} k)
+  (a :
+    AlgHom.{u_1, u_1, u_1} k ↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u_1, u_1 + 1} A)
+      ↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u_1, u_1 + 1} B))
+  (x : ↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u_1, u_1 + 1} A)),
+  Eq.{u_1 + 1} (a ((EtaleCounterexample.finiteEtaleNonintegralAutomorphism.{u_1} k A) x))
+    ((EtaleCounterexample.finiteEtaleNonintegralAutomorphism.{u_1} k B) (a x))
+EtaleCounterexample.nonintegralSiteIso.{u_1} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [Fintype.{u_1} k] →
+      CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+        (CategoryTheory.Functor.id.{u_1, u_1 + 1} (Opposite.{u_1 + 2} (CommAlgCat.FiniteEtale.{u_1, u_1} k)))
+        (CategoryTheory.Functor.id.{u_1, u_1 + 1} (Opposite.{u_1 + 2} (CommAlgCat.FiniteEtale.{u_1, u_1} k)))
+EtaleCounterexample.nonintegralToposIso.{u_1} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [Fintype.{u_1} k] →
+      CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+        (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.EtaleTopos.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.EtaleTopos.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+EtaleCounterexample.nonintegralAutomorphism_fiber.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k] (Ω : Type u_1) [inst_2 : Field.{u_1} Ω] [inst_3 : Algebra.{u_1, u_1} k Ω]
+  [inst_4 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] (A : CommAlgCat.FiniteEtale.{u_1, u_1} k)
+  (a : AlgHom.{u_1, u_1, u_1} k (↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u_1, u_1 + 1} A)) Ω)
+  (x : ↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u_1, u_1 + 1} A)),
+  Eq.{u_1 + 1} ((EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_1} k Ω) (a x))
+    (a ((EtaleCounterexample.finiteEtaleNonintegralAutomorphism.{u_1} k A) x))
+EtaleCounterexample.nonintegralPointMate_eq_toposIso.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k] [inst_2 : Field.{u_1} Ω] [inst_3 : Algebra.{u_1, u_1} k Ω]
+  [inst_4 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] [inst_5 : IsSepClosed.{u_1} Ω] (M : Type u_1),
+  Eq.{u_1 + 2}
+    (CategoryTheory.NatTrans.app.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1}
+        (EtaleCounterexample.etalePointRightMateOfEq.{u_1} (EtaleCounterexample.nonintegralSpecAutomorphism.{u_1} k Ω)
+          ⋯))
+      M)
+    (CategoryTheory.NatTrans.app.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.nonintegralToposIso.{u_1} k))
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.etalePoint.{u_1} (EtaleCounterexample.fieldGeometricPoint.{u_1} k Ω)))
+        M))
+EtaleCounterexample.nonintegralTwist.{u_1} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [Fintype.{u_1} k] →
+      {X : AlgebraicGeometry.Scheme.{u_1}} →
+        (f : Quiver.Hom.{u_1, u_1 + 1} X (AlgebraicGeometry.Spec.{u_1} ↧k)) →
+          EtaleCounterexample.RelativeMorphism.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+            (EtaleCounterexample.etaleDirectImage.{u_1} f) (EtaleCounterexample.etaleDirectImage.{u_1} f)
+EtaleCounterexample.nonintegral_relativePointAction.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k] [inst_2 : Field.{u_1} Ω] [inst_3 : Algebra.{u_1, u_1} k Ω]
+  [inst_4 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] [inst_5 : IsSepClosed.{u_1} Ω] {X : AlgebraicGeometry.Scheme.{u_1}}
+  (f : Quiver.Hom.{u_1, u_1 + 1} X (AlgebraicGeometry.Spec.{u_1} ↧k))
+  (s : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X)
+  (hs :
+    Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} s f)
+      (EtaleCounterexample.fieldGeometricPoint.{u_1} k Ω)),
+  EtaleCounterexample.RelativeCompatible.{u_1 + 1, u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.twistRelativeEtalePoint.{u_1} f s hs
+      (CategoryTheory.Iso.symm.{u_1 + 1, u_1 + 1} (EtaleCounterexample.nonintegralToposIso.{u_1} k)))
+    (EtaleCounterexample.relativeEtalePoint.{u_1} f
+      (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1, u_1 + 1} (EtaleCounterexample.nonintegralSpecAutomorphism.{u_1} k Ω)) s)
+      ⋯)
+    (CategoryTheory.Iso.symm.{u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.etalePointRightMateOfEq.{u_1} (EtaleCounterexample.nonintegralSpecAutomorphism.{u_1} k Ω) ⋯))
+EtaleCounterexample.multiplicativeGroup_nonintegral_relativePointAction.{u_1} : ∀ (k Ω : Type u_1)
+  [inst : Field.{u_1} k] [inst_1 : Fintype.{u_1} k] [inst_2 : Field.{u_1} Ω] [inst_3 : Algebra.{u_1, u_1} k Ω]
+  [inst_4 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] [inst_5 : IsSepClosed.{u_1} Ω] (z : Units.{u_1} Ω),
+  ∃ γ,
+    EtaleCounterexample.RelativeCompatible.{u_1 + 1, u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.twistRelativeEtalePoint.{u_1} (EtaleCounterexample.multiplicativeGroupStructure.{u_1} k)
+        (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω z) ⋯
+        (CategoryTheory.Iso.symm.{u_1 + 1, u_1 + 1} (EtaleCounterexample.nonintegralToposIso.{u_1} k)))
+      (EtaleCounterexample.relativeEtalePoint.{u_1} (EtaleCounterexample.multiplicativeGroupStructure.{u_1} k)
+        (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω
+          ((Units.map.{u_1, u_1}
+              (MulEquiv.toMonoidHom.{u_1, u_1}
+                (AlgEquiv.toMulEquiv.{u_1, u_1, u_1}
+                  (EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_1} k Ω))))
+            z))
+        ⋯)
+      γ
+@EtaleCounterexample.identityTwist_isRelativeEquivalence.{u_1, u_2, u_3,
+    u_4} : ∀ {E : Type u_1} {B : Type u_3} [inst : CategoryTheory.Category.{u_2, u_1} E]
+  [inst_1 : CategoryTheory.Category.{u_4, u_3} B] (π : CategoryTheory.Functor.{u_2, u_4, u_1, u_3} E B)
+  (η :
+    CategoryTheory.Iso.{max u_3 u_4, max u_3 u_4} (CategoryTheory.Functor.id.{u_4, u_3} B)
+      (CategoryTheory.Functor.id.{u_4, u_3} B)),
+  EtaleCounterexample.IsRelativeEquivalence.{u_1, u_2, u_1, u_2, u_3, u_4}
+    (EtaleCounterexample.identityTwist.{u_1, u_2, u_3, u_4} π η)
+@EtaleCounterexample.relativeEtalePoint_comp_identityTwist.{u_1} : ∀ {X Y : AlgebraicGeometry.Scheme.{u_1}}
+  {Ω : Type u_1} [inst : Field.{u_1} Ω] [inst_1 : IsSepClosed.{u_1} Ω] (f : Quiver.Hom.{u_1, u_1 + 1} X Y)
+  (s : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X)
+  {ω : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) Y}
+  (hs : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} s f) ω)
+  (η :
+    CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1} (EtaleCounterexample.EtaleTopos.{u_1} Y))
+      (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1} (EtaleCounterexample.EtaleTopos.{u_1} Y))),
+  EtaleCounterexample.RelativeCompatible.{u_1 + 1, u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.RelativeMorphism.comp.{u_1 + 1, u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.relativeEtalePoint.{u_1} f s hs)
+      (EtaleCounterexample.identityTwist.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (EtaleCounterexample.etaleDirectImage.{u_1} f) η))
+    (EtaleCounterexample.twistRelativeEtalePoint.{u_1} f s hs η)
+    (CategoryTheory.Functor.rightUnitor.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+        (EtaleCounterexample.etalePoint.{u_1} s)))
+EtaleCounterexample.nonintegralTwist_isRelativeEquivalence.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k] {X : AlgebraicGeometry.Scheme.{u_1}}
+  (f : Quiver.Hom.{u_1, u_1 + 1} X (AlgebraicGeometry.Spec.{u_1} ↧k)),
+  EtaleCounterexample.IsRelativeEquivalence.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.nonintegralTwist.{u_1} k f)
+EtaleCounterexample.nonintegralTwist_underlying_identity.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k] {X : AlgebraicGeometry.Scheme.{u_1}}
+  (f : Quiver.Hom.{u_1, u_1 + 1} X (AlgebraicGeometry.Spec.{u_1} ↧k)),
+  Eq.{u_1 + 2}
+    (EtaleCounterexample.RelativeMorphism.geometric.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.nonintegralTwist.{u_1} k f))
+    (EtaleCounterexample.GeometricMorphism.id.{u_1 + 1, u_1 + 1} (EtaleCounterexample.EtaleTopos.{u_1} X))
+@EtaleCounterexample.every_localized_morphism_has_roof.{u_1,
+    u_2} : ∀ {C : Type u_1} [inst : CategoryTheory.Category.{u_2, u_1} C]
+  (W : CategoryTheory.MorphismProperty.{u_2, u_1} C) [CategoryTheory.MorphismProperty.IsMultiplicative.{u_2, u_1} W],
+  (∀ {X Y T : C} (f : Quiver.Hom.{u_2, u_1} X T) (s : Quiver.Hom.{u_2, u_1} Y T),
+      W s →
+        ∃ P r t,
+          W r ∧
+            Eq.{u_2 + 1} (CategoryTheory.CategoryStruct.comp.{u_2, u_1} r f)
+              (CategoryTheory.CategoryStruct.comp.{u_2, u_1} t s)) →
+    ∀ (X Y : C)
+      (a :
+        Quiver.Hom.{max u_1 u_2, u_1}
+          (CategoryTheory.Functor.obj.{u_2, max u_1 u_2, u_1, u_1} (CategoryTheory.MorphismProperty.Q.{u_2, u_1} W) X)
+          (CategoryTheory.Functor.obj.{u_2, max u_1 u_2, u_1, u_1} (CategoryTheory.MorphismProperty.Q.{u_2, u_1} W) Y)),
+      ∃ Z s f,
+        W s ∧
+          Eq.{max (u_1 + 1) (u_2 + 1)}
+            (CategoryTheory.CategoryStruct.comp.{max u_1 u_2, u_1}
+              (CategoryTheory.Functor.map.{u_2, max u_1 u_2, u_1, u_1} (CategoryTheory.MorphismProperty.Q.{u_2, u_1} W)
+                s)
+              a)
+            (CategoryTheory.Functor.map.{u_2, max u_1 u_2, u_1, u_1} (CategoryTheory.MorphismProperty.Q.{u_2, u_1} W) f)
+@EtaleCounterexample.isAffineHom_of_homeomorph.{u_1} : ∀ {X Y : AlgebraicGeometry.Scheme.{u_1}}
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y), IsHomeomorph.{u_1, u_1} ⇑f → AlgebraicGeometry.IsAffineHom.{u_1} f
+@EtaleCounterexample.universalHomeomorphism_integral.{u_1} : ∀ {X Y : AlgebraicGeometry.Scheme.{u_1}}
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y),
+  EtaleCounterexample.universalHomeomorphisms.{u_1} f → AlgebraicGeometry.IsIntegralHom.{u_1} f
+@EtaleCounterexample.universalHomeomorphism_geometricPoints_bijective.{u_1} : ∀ {X Y : AlgebraicGeometry.Scheme.{u_1}}
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y),
+  EtaleCounterexample.universalHomeomorphisms.{u_1} f →
+    ∀ (Ω : Type u_1) [inst : Field.{u_1} Ω] [IsAlgClosed.{u_1} Ω],
+      Function.Bijective.{u_1 + 1, u_1 + 1} fun g => CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} g f
+EtaleCounterexample.localizedScheme_morphism_has_roof.{u_1} : ∀ (S : AlgebraicGeometry.Scheme.{u_1})
+  [AlgebraicGeometry.IsNoetherian.{u_1} S] (X Y : EtaleCounterexample.FiniteTypeSchemes.{u_1} S)
+  (a :
+    Quiver.Hom.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)) X)
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)) Y)),
+  ∃ Z s f,
+    EtaleCounterexample.relativeUH.{u_1} S s ∧
+      Eq.{u_1 + 2}
+        (CategoryTheory.CategoryStruct.comp.{u_1 + 1, u_1 + 1}
+          (CategoryTheory.Functor.map.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+            (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)) s)
+          a)
+        (CategoryTheory.Functor.map.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)) f)
+EtaleCounterexample.localizedScheme_morphism_has_affine_roof.{u_1} : ∀ (S : AlgebraicGeometry.Scheme.{u_1})
+  [AlgebraicGeometry.IsNoetherian.{u_1} S] (X Y : EtaleCounterexample.FiniteTypeSchemes.{u_1} S)
+  [AlgebraicGeometry.IsAffine.{u_1}
+      (CategoryTheory.Comma.left.{u_1, 0, u_1, u_1 + 1, 0, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Comma.toComma.{u_1, u_1 + 1, 0, 0, u_1, u_1 + 1} X))]
+  (a :
+    Quiver.Hom.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)) X)
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)) Y)),
+  ∃ Z s f,
+    AlgebraicGeometry.IsAffine.{u_1}
+        (CategoryTheory.Comma.left.{u_1, 0, u_1, u_1 + 1, 0, u_1 + 1}
+          (CategoryTheory.MorphismProperty.Comma.toComma.{u_1, u_1 + 1, 0, 0, u_1, u_1 + 1} Z)) ∧
+      EtaleCounterexample.relativeUH.{u_1} S s ∧
+        Eq.{u_1 + 2}
+          (CategoryTheory.CategoryStruct.comp.{u_1 + 1, u_1 + 1}
+            (CategoryTheory.Functor.map.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+              (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)) s)
+            a)
+          (CategoryTheory.Functor.map.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+            (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)) f)
+EtaleCounterexample.radicial_fraction_purelyInseparable.{u_1} : ∀ (A B : Type u_1) [inst : CommRing.{u_1} A]
+  [IsDomain.{u_1} A] [inst_2 : CommRing.{u_1} B] [inst_3 : IsDomain.{u_1} B] [inst_4 : Algebra.{u_1, u_1} A B]
+  [inst_5 : FaithfulSMul.{u_1, u_1} A B],
+  (∀ (K : Type u_1) [inst_6 : Field.{u_1} K],
+      Function.Injective.{u_1 + 1, u_1 + 1} fun g => RingHom.comp.{u_1, u_1, u_1} g (algebraMap.{u_1, u_1} A B)) →
+    IsPurelyInseparable.{u_1, u_1} (FractionRing.{u_1} A) (FractionRing.{u_1} B)
+EtaleCounterexample.radicial_integral_normal_pow_mem_nonreduced.{u_1} : ∀ (A B : Type u_1) [inst : CommRing.{u_1} A]
+  [IsDomain.{u_1} A] [IsIntegrallyClosed.{u_1} A] [inst_3 : CommRing.{u_1} B] [inst_4 : Algebra.{u_1, u_1} A B]
+  [Algebra.IsIntegral.{u_1, u_1} A B] [Ideal.IsPrime.{u_1} (nilradical.{u_1} B)] (p : ℕ) [Fact (Nat.Prime p)]
+  [CharP.{u_1} A p] [CharP.{u_1} B p],
+  Function.Injective.{u_1 + 1, u_1 + 1}
+      ⇑(algebraMap.{u_1, u_1} A (HasQuotient.Quotient.{u_1, u_1} B (nilradical.{u_1} B))) →
+    (∀ (K : Type u_1) [inst_10 : Field.{u_1} K],
+        Function.Injective.{u_1 + 1, u_1 + 1} fun g => RingHom.comp.{u_1, u_1, u_1} g (algebraMap.{u_1, u_1} A B)) →
+      ∀ (b : B),
+        ∃ n,
+          Membership.mem.{u_1, u_1} (RingHom.range.{u_1, u_1} (algebraMap.{u_1, u_1} A B))
+            (HPow.hPow.{u_1, 0, u_1} b (HPow.hPow.{0, 0, 0} p n))
+EtaleCounterexample.affineUH_pow_mem.{u_1} : ∀ (A B : Type u_1) [inst : CommRing.{u_1} A] [IsDomain.{u_1} A]
+  [IsIntegrallyClosed.{u_1} A] [inst_3 : CommRing.{u_1} B] [inst_4 : Algebra.{u_1, u_1} A B] (p : ℕ)
+  [Fact (Nat.Prime p)] [CharP.{u_1} A p] [CharP.{u_1} B p],
+  EtaleCounterexample.universalHomeomorphisms.{u_1}
+      (AlgebraicGeometry.Spec.map.{u_1} (CommRingCat.ofHom.{u_1} (algebraMap.{u_1, u_1} A B))) →
+    ∀ (b : B),
+      ∃ n,
+        Membership.mem.{u_1, u_1} (RingHom.range.{u_1, u_1} (algebraMap.{u_1, u_1} A B))
+          (HPow.hPow.{u_1, 0, u_1} b (HPow.hPow.{0, 0, 0} p n))
+EtaleCounterexample.laurentUH_unit_pow_monomial.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (B : Type u_1)
+  [inst_1 : CommRing.{u_1} B] (p : ℕ) [Fact (Nat.Prime p)] [CharP.{u_1} k p] [CharP.{u_1} B p]
+  (φ : RingHom.{u_1, u_1} (LaurentPolynomial.{u_1} k) B),
+  EtaleCounterexample.universalHomeomorphisms.{u_1} (AlgebraicGeometry.Spec.map.{u_1} (CommRingCat.ofHom.{u_1} φ)) →
+    ∀ (b : B),
+      IsUnit.{u_1} b →
+        ∃ d c m,
+          Ne.{u_1 + 1} c 0 ∧
+            Eq.{u_1 + 1} (HPow.hPow.{u_1, 0, u_1} b (HPow.hPow.{0, 0, 0} p d))
+              (φ (HMul.hMul.{u_1, u_1, u_1} (LaurentPolynomial.C.{u_1} c) (LaurentPolynomial.T.{u_1} m)))
+@EtaleCounterexample.schemePointsFunctor_invertsUH.{u_1} : ∀ {S : AlgebraicGeometry.Scheme.{u_1}} {Ω : Type u_1}
+  [inst : Field.{u_1} Ω] (ω : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) S) [IsAlgClosed.{u_1} Ω],
+  CategoryTheory.MorphismProperty.IsInvertedBy.{u_1, u_1, u_1 + 1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)
+    (EtaleCounterexample.schemePointsFunctor.{u_1} ω)
+@EtaleCounterexample.localizedSchemePoints.{u_1} : {S : AlgebraicGeometry.Scheme.{u_1}} →
+  {Ω : Type u_1} →
+    [inst : Field.{u_1} Ω] →
+      Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) S →
+        [IsAlgClosed.{u_1} Ω] →
+          CategoryTheory.Functor.{u_1 + 1, u_1, u_1 + 1, u_1 + 1} (EtaleCounterexample.LocalizedSchemes.{u_1} S)
+            (Type u_1)
+@EtaleCounterexample.localizedSchemePoints_map.{u_1} : ∀ {S : AlgebraicGeometry.Scheme.{u_1}} {Ω : Type u_1}
+  [inst : Field.{u_1} Ω] (ω : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) S)
+  [inst_1 : IsAlgClosed.{u_1} Ω] (X Y : EtaleCounterexample.FiniteTypeSchemes.{u_1} S)
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y),
+  Eq.{u_1 + 1}
+    (CategoryTheory.Functor.map.{u_1 + 1, u_1, u_1 + 1, u_1 + 1} (EtaleCounterexample.localizedSchemePoints.{u_1} ω)
+      (CategoryTheory.Functor.map.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1} (EtaleCounterexample.relativeUH.{u_1} S)) f))
+    (CategoryTheory.Functor.map.{u_1, u_1, u_1 + 1, u_1 + 1} (EtaleCounterexample.schemePointsFunctor.{u_1} ω) f)
+EtaleCounterexample.multiplicativeGroup_roof_monomial.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : Algebra.{u_1, u_1} k Ω] (p : ℕ) [Fact (Nat.Prime p)] [CharP.{u_1} k p]
+  (Z : EtaleCounterexample.FiniteTypeSchemes.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k))
+  [AlgebraicGeometry.IsAffine.{u_1}
+      (CategoryTheory.Comma.left.{u_1, 0, u_1, u_1 + 1, 0, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Comma.toComma.{u_1, u_1 + 1, 0, 0, u_1, u_1 + 1} Z))]
+  (s f : Quiver.Hom.{u_1, u_1 + 1} Z (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k)),
+  EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k) s →
+    ∃ d c m,
+      Ne.{u_1 + 1} c 0 ∧
+        ∀
+          (l :
+            Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω)
+              (CategoryTheory.Comma.left.{u_1, 0, u_1, u_1 + 1, 0, u_1 + 1}
+                (CategoryTheory.MorphismProperty.Comma.toComma.{u_1, u_1 + 1, 0, 0, u_1, u_1 + 1} Z)))
+          (z : Units.{u_1} Ω),
+          Eq.{u_1 + 1}
+              (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} l
+                (CategoryTheory.CommaMorphism.left.{u_1, 0, u_1, u_1 + 1, 0, u_1 + 1}
+                  (CategoryTheory.MorphismProperty.Comma.Hom.toCommaMorphism.{u_1, u_1 + 1, 0, 0, u_1, u_1 + 1} s)))
+              (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω z) →
+            Eq.{u_1 + 1}
+              (HPow.hPow.{u_1, 0, u_1}
+                ((CommRingCat.Hom.hom.{u_1}
+                    (AlgebraicGeometry.Spec.preimage.{u_1}
+                      (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} l
+                        (CategoryTheory.CommaMorphism.left.{u_1, 0, u_1, u_1 + 1, 0, u_1 + 1}
+                          (CategoryTheory.MorphismProperty.Comma.Hom.toCommaMorphism.{u_1, u_1 + 1, 0, 0, u_1, u_1 + 1}
+                            f)))))
+                  (LaurentPolynomial.T.{u_1} 1))
+                (HPow.hPow.{0, 0, 0} p d))
+              (HMul.hMul.{u_1, u_1, u_1} ((algebraMap.{u_1, u_1} k Ω) c) (HPow.hPow.{u_1, 0, u_1} (↑z) m))
+EtaleCounterexample.localizedEndomorphism_monomial_pointAction.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : Algebra.{u_1, u_1} k Ω] (p : ℕ) [Fact (Nat.Prime p)] [CharP.{u_1} k p]
+  [inst_5 : IsAlgClosed.{u_1} Ω]
+  (a :
+    Quiver.Hom.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))),
+  ∃ d c m,
+    Ne.{u_1 + 1} c 0 ∧
+      ∀ (z : Units.{u_1} Ω),
+        Eq.{u_1 + 1}
+          (HPow.hPow.{u_1, 0, u_1}
+            (EtaleCounterexample.multiplicativeGroupCoordinate.{u_1} k Ω
+              ((CategoryTheory.ConcreteCategory.hom.{u_1, u_1, u_1 + 1, u_1}
+                  (CategoryTheory.Functor.map.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                    (EtaleCounterexample.localizedSchemePoints.{u_1}
+                      (EtaleCounterexample.fieldGeometricPoint.{u_1} k Ω))
+                    a))
+                (EtaleCounterexample.multiplicativeGroupRelativePoint.{u_1} k Ω z)))
+            (HPow.hPow.{0, 0, 0} p d))
+          (HMul.hMul.{u_1, u_1, u_1} ((algebraMap.{u_1, u_1} k Ω) c) (HPow.hPow.{u_1, 0, u_1} (↑z) m))
+EtaleCounterexample.nonintegral_action_not_localized_scheme_action.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k] [inst_2 : Field.{u_1} Ω] [inst_3 : Algebra.{u_1, u_1} k Ω]
+  [inst_4 : Algebra.IsAlgebraic.{u_1, u_1} k Ω] [inst_5 : IsAlgClosed.{u_1} Ω] (p : ℕ) [Fact (Nat.Prime p)]
+  [CharP.{u_1} k p] [CharP.{u_1} Ω p]
+  (a :
+    Quiver.Hom.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))),
+  ¬∀ (z : Units.{u_1} Ω),
+      Eq.{u_1 + 1}
+        (EtaleCounterexample.multiplicativeGroupCoordinate.{u_1} k Ω
+          ((CategoryTheory.ConcreteCategory.hom.{u_1, u_1, u_1 + 1, u_1}
+              (CategoryTheory.Functor.map.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                (EtaleCounterexample.localizedSchemePoints.{u_1} (EtaleCounterexample.fieldGeometricPoint.{u_1} k Ω))
+                a))
+            (EtaleCounterexample.multiplicativeGroupRelativePoint.{u_1} k Ω z)))
+        ((EtaleCounterexample.nonintegralFieldAutomorphism.{u_1, u_1} k Ω) ↑z)
+@EtaleCounterexample.etalePoint_liftIso_of_rightIso.{u_1} : {X : AlgebraicGeometry.Scheme.{u_1}} →
+  {Ω : Type u_1} →
+    [inst : Field.{u_1} Ω] →
+      [inst_1 : IsSepClosed.{u_1} Ω] →
+        (s t : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) X) →
+          CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+              (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                (EtaleCounterexample.etalePoint.{u_1} s))
+              (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+                (EtaleCounterexample.etalePoint.{u_1} t)) →
+            CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+              (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_1, u_1 + 1}
+                (AlgebraicGeometry.Scheme.pointSmallEtale.{u_1} t))
+              (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_1, u_1 + 1}
+                (AlgebraicGeometry.Scheme.pointSmallEtale.{u_1} s))
+'EtaleCounterexample.twoPrimaryResidue_compatible' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.twoPrimaryExponent' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.twoPrimaryExponent_odd' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.twoPrimaryExponent_two_power' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.twoPrimaryExponent_not_integral' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.twoPrimaryAlgHom' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteFieldFrobenius_locallyPeriodic' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralFieldAutomorphism' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.nonintegralFieldAutomorphism_period' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralFieldAutomorphism_odd_fixed' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralFieldAutomorphism_quadratic' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralFieldAutomorphism_central' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralFieldAutomorphism_moves' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralFieldAutomorphism_no_monomial' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralFieldAutomorphism_unique' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.finiteEtaleNonintegralAutomorphism_natural' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralSiteIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.nonintegralToposIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.nonintegralAutomorphism_fiber' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.nonintegralPointMate_eq_toposIso' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralTwist' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.nonintegral_relativePointAction' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.multiplicativeGroup_nonintegral_relativePointAction' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.identityTwist_isRelativeEquivalence' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.relativeEtalePoint_comp_identityTwist' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralTwist_isRelativeEquivalence' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegralTwist_underlying_identity' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.every_localized_morphism_has_roof' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.isAffineHom_of_homeomorph' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.universalHomeomorphism_integral' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.universalHomeomorphism_geometricPoints_bijective' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.localizedScheme_morphism_has_roof' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.localizedScheme_morphism_has_affine_roof' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.radicial_fraction_purelyInseparable' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.radicial_integral_normal_pow_mem_nonreduced' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.affineUH_pow_mem' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.laurentUH_unit_pow_monomial' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.schemePointsFunctor_invertsUH' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.localizedSchemePoints' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.localizedSchemePoints_map' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.multiplicativeGroup_roof_monomial' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.localizedEndomorphism_monomial_pointAction' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.nonintegral_action_not_localized_scheme_action' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.etalePoint_liftIso_of_rightIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+EtaleCounterexample.skyscraperFiberMap_projection.{u, v, w} {C : Type v} [CategoryTheory.Category.{w, v} C]
+  {J : CategoryTheory.GrothendieckTopology.{w, v} C} {Φ Ψ : CategoryTheory.GrothendieckTopology.Point.{u, w, v} J}
+  (α :
+    Quiver.Hom.{max (u + 1) v, max (max (u + 1) v) w}
+      (CategoryTheory.GrothendieckTopology.Point.skyscraperSheafFunctor.{u, u, w, u + 1, v} Φ)
+      (CategoryTheory.GrothendieckTopology.Point.skyscraperSheafFunctor.{u, u, w, u + 1, v} Ψ))
+  (M : Type u) (U : C)
+  (x : CategoryTheory.Functor.obj.{w, u, v, u + 1} (CategoryTheory.GrothendieckTopology.Point.fiber.{u, w, v} Ψ) U) :
+  Eq.{u + 1}
+    (CategoryTheory.CategoryStruct.comp.{u, u + 1}
+      (CategoryTheory.NatTrans.app.{w, u, v, u + 1}
+        (CategoryTheory.InducedCategory.Hom.hom.{max u v, max (max (u + 1) v) w, max (max (u + 1) v) w}
+          (CategoryTheory.NatTrans.app.{u, max u v, u + 1, max (max (u + 1) v) w} α M))
+        (Opposite.op.{v + 1} U))
+      (CategoryTheory.Limits.Pi.π.{u, u, u + 1} (fun t => M) x))
+    (CategoryTheory.Limits.Pi.π.{u, u, u + 1} (fun t => M) (EtaleCounterexample.skyscraperFiberMap.{u, v, w} α U x))
+EtaleCounterexample.skyscraperFiberMap_naturality.{u, v, w} {C : Type v} [CategoryTheory.Category.{w, v} C]
+  {J : CategoryTheory.GrothendieckTopology.{w, v} C} {Φ Ψ : CategoryTheory.GrothendieckTopology.Point.{u, w, v} J}
+  (α :
+    Quiver.Hom.{max (u + 1) v, max (max (u + 1) v) w}
+      (CategoryTheory.GrothendieckTopology.Point.skyscraperSheafFunctor.{u, u, w, u + 1, v} Φ)
+      (CategoryTheory.GrothendieckTopology.Point.skyscraperSheafFunctor.{u, u, w, u + 1, v} Ψ))
+  {U V : C} (f : Quiver.Hom.{w, v} U V)
+  (x : CategoryTheory.Functor.obj.{w, u, v, u + 1} (CategoryTheory.GrothendieckTopology.Point.fiber.{u, w, v} Ψ) U) :
+  Eq.{u + 1}
+    (EtaleCounterexample.skyscraperFiberMap.{u, v, w} α V
+      ((CategoryTheory.ConcreteCategory.hom.{u, u, u + 1, u}
+          (CategoryTheory.Functor.map.{w, u, v, u + 1} (CategoryTheory.GrothendieckTopology.Point.fiber.{u, w, v} Ψ) f))
+        x))
+    ((CategoryTheory.ConcreteCategory.hom.{u, u, u + 1, u}
+        (CategoryTheory.Functor.map.{w, u, v, u + 1} (CategoryTheory.GrothendieckTopology.Point.fiber.{u, w, v} Φ) f))
+      (EtaleCounterexample.skyscraperFiberMap.{u, v, w} α U x))
+EtaleCounterexample.relativePointIso_preserves_baseLifts.{u} {X Y : AlgebraicGeometry.Scheme.{u}} {Ω : Type u}
+  [Field.{u} Ω] [IsSepClosed.{u} Ω] (f : Quiver.Hom.{u, u + 1} X Y)
+  (s t : Quiver.Hom.{u, u + 1} (AlgebraicGeometry.Spec.{u} ↧Ω) X)
+  {ω : Quiver.Hom.{u, u + 1} (AlgebraicGeometry.Spec.{u} ↧Ω) Y}
+  (hs : Eq.{u + 1} (CategoryTheory.CategoryStruct.comp.{u, u + 1} s f) ω)
+  (ht : Eq.{u + 1} (CategoryTheory.CategoryStruct.comp.{u, u + 1} t f) ω)
+  (γ :
+    CategoryTheory.Iso.{u + 1, u + 1}
+      (EtaleCounterexample.GeometricMorphism.directImage.{u + 1, u, u + 1, u + 1}
+        (EtaleCounterexample.etalePoint.{u} s))
+      (EtaleCounterexample.GeometricMorphism.directImage.{u + 1, u, u + 1, u + 1}
+        (EtaleCounterexample.etalePoint.{u} t)))
+  (hγ :
+    EtaleCounterexample.RelativeCompatible.{u + 1, u, u + 1, u + 1, u + 1, u + 1}
+      (EtaleCounterexample.relativeEtalePoint.{u} f s hs) (EtaleCounterexample.relativeEtalePoint.{u} f t ht) γ)
+  (U : AlgebraicGeometry.Scheme.Etale.{u} Y)
+  (x :
+    CategoryTheory.Functor.obj.{u, u, u + 1, u + 1}
+      (CategoryTheory.GrothendieckTopology.Point.fiber.{u, u, u + 1} (AlgebraicGeometry.Scheme.pointSmallEtale.{u} ω))
+      U) :
+  Eq.{u + 1}
+    (EtaleCounterexample.skyscraperFiberMap.{u, u + 1, u} (CategoryTheory.Iso.hom.{u + 1, u + 1} γ)
+      (CategoryTheory.Functor.obj.{u, u, u + 1, u + 1} (EtaleCounterexample.etaleBaseChange.{u} f) U)
+      ((CategoryTheory.ConcreteCategory.hom.{u, u, u + 1, u}
+          (CategoryTheory.NatTrans.app.{u, u, u + 1, u + 1}
+            (CategoryTheory.Iso.inv.{u + 1, u + 1} (EtaleCounterexample.etaleBaseChangeFiberIsoOfEq.{u} f t ht)) U))
+        x))
+    ((CategoryTheory.ConcreteCategory.hom.{u, u, u + 1, u}
+        (CategoryTheory.NatTrans.app.{u, u, u + 1, u + 1}
+          (CategoryTheory.Iso.inv.{u + 1, u + 1} (EtaleCounterexample.etaleBaseChangeFiberIsoOfEq.{u} f s hs)) U))
+      x)
+EtaleCounterexample.etaleFiberTransformation_mem_open.{u} {X : AlgebraicGeometry.Scheme.{u}} {Ω : Type u} [Field.{u} Ω]
+  [IsSepClosed.{u} Ω] {s t : Quiver.Hom.{u, u + 1} (AlgebraicGeometry.Spec.{u} ↧Ω) X}
+  (α :
+    Quiver.Hom.{u + 1, u + 1}
+      (CategoryTheory.GrothendieckTopology.Point.fiber.{u, u, u + 1} (AlgebraicGeometry.Scheme.pointSmallEtale.{u} t))
+      (CategoryTheory.GrothendieckTopology.Point.fiber.{u, u, u + 1} (AlgebraicGeometry.Scheme.pointSmallEtale.{u} s)))
+  (U : AlgebraicGeometry.Scheme.Etale.{u} X)
+  (l :
+    CategoryTheory.Functor.obj.{u, u, u + 1, u + 1}
+      (CategoryTheory.GrothendieckTopology.Point.fiber.{u, u, u + 1} (AlgebraicGeometry.Scheme.pointSmallEtale.{u} t))
+      U)
+  (V :
+    AlgebraicGeometry.Scheme.Opens.{u}
+      (CategoryTheory.Comma.left.{u, 0, u, u + 1, 0, u + 1}
+        (CategoryTheory.MorphismProperty.Comma.toComma.{u, u + 1, 0, 0, u, u + 1} U)))
+  (hl : Membership.mem.{u, u} V ((CategoryTheory.Over.Hom.left.{u, u + 1} l) default.{u + 1})) :
+  Membership.mem.{u, u} V
+    ((CategoryTheory.Over.Hom.left.{u, u + 1}
+        ((CategoryTheory.ConcreteCategory.hom.{u, u, u + 1, u} (CategoryTheory.NatTrans.app.{u, u, u + 1, u + 1} α U))
+          l))
+      default.{u + 1})
+EtaleCounterexample.etaleFiberTransformation_reflects_zero.{u} {X : AlgebraicGeometry.Scheme.{u}} {Ω : Type u}
+  [Field.{u} Ω] [IsSepClosed.{u} Ω] {s t : Quiver.Hom.{u, u + 1} (AlgebraicGeometry.Spec.{u} ↧Ω) X}
+  (α :
+    Quiver.Hom.{u + 1, u + 1}
+      (CategoryTheory.GrothendieckTopology.Point.fiber.{u, u, u + 1} (AlgebraicGeometry.Scheme.pointSmallEtale.{u} t))
+      (CategoryTheory.GrothendieckTopology.Point.fiber.{u, u, u + 1} (AlgebraicGeometry.Scheme.pointSmallEtale.{u} s)))
+  (U : AlgebraicGeometry.Scheme.Etale.{u} X)
+  (l :
+    CategoryTheory.Functor.obj.{u, u, u + 1, u + 1}
+      (CategoryTheory.GrothendieckTopology.Point.fiber.{u, u, u + 1} (AlgebraicGeometry.Scheme.pointSmallEtale.{u} t))
+      U)
+  (r :
+    ↑(CategoryTheory.Functor.obj.{u, u, u, u + 1}
+        (AlgebraicGeometry.PresheafedSpace.presheaf.{u, u + 1, u}
+          (AlgebraicGeometry.SheafedSpace.toPresheafedSpace.{u + 1, u, u}
+            (AlgebraicGeometry.LocallyRingedSpace.toSheafedSpace.{u}
+              (AlgebraicGeometry.Scheme.toLocallyRingedSpace.{u}
+                (CategoryTheory.Comma.left.{u, 0, u, u + 1, 0, u + 1}
+                  (CategoryTheory.MorphismProperty.Comma.toComma.{u, u + 1, 0, 0, u, u + 1} U))))))
+        (Opposite.op.{u + 1} Top.top.{u})))
+  (h :
+    Eq.{u + 1}
+      (EtaleCounterexample.geometricSectionValue.{u}
+        (CategoryTheory.Over.Hom.left.{u, u + 1}
+          ((CategoryTheory.ConcreteCategory.hom.{u, u, u + 1, u} (CategoryTheory.NatTrans.app.{u, u, u + 1, u + 1} α U))
+            l))
+        r)
+      0) :
+  Eq.{u + 1} (EtaleCounterexample.geometricSectionValue.{u} (CategoryTheory.Over.Hom.left.{u, u + 1} l) r) 0
+EtaleCounterexample.coordinateDifference_value.{u} (k Ω : Type u) [Field.{u} k] [Field.{u} Ω] [IsSepClosed.{u} Ω]
+  [Algebra.{u, u} k Ω] (A : CommAlgCat.FiniteEtale.{u, u} k)
+  (b : AlgHom.{u, u, u} k (↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u, u + 1} A)) Ω)
+  (a : ↑(CategoryTheory.ObjectProperty.FullSubcategory.obj.{u, u + 1} A)) (z : Units.{u} Ω) :
+  Eq.{u + 1}
+    (EtaleCounterexample.geometricSectionValue.{u}
+      (CategoryTheory.Over.Hom.left.{u, u + 1} (EtaleCounterexample.finiteEtaleBaseLift.{u} k Ω A b z))
+      (EtaleCounterexample.coordinateDifference.{u} k A a))
+    (HSub.hSub.{u, u, u} (b a) ↑z)
+EtaleCounterexample.exists_finiteEtale_coordinate.{u} (k Ω : Type u) [Field.{u} k] [Field.{u} Ω] [Algebra.{u, u} k Ω]
+  [Fintype.{u} k] [Algebra.IsAlgebraic.{u, u} k Ω] (z : Ω) : ∃ A b a, Eq.{u + 1} (b a) z
+EtaleCounterexample.relative_multiplicativeGroupPoint_eq.{u} (k Ω : Type u) [Field.{u} k] [Field.{u} Ω]
+  [IsSepClosed.{u} Ω] [Algebra.{u, u} k Ω] [Fintype.{u} k] [Algebra.IsAlgebraic.{u, u} k Ω] (z w : Units.{u} Ω)
+  (γ :
+    CategoryTheory.Iso.{u + 1, u + 1}
+      (EtaleCounterexample.GeometricMorphism.directImage.{u + 1, u, u + 1, u + 1}
+        (EtaleCounterexample.etalePoint.{u} (EtaleCounterexample.multiplicativeGroupPoint.{u} k Ω z)))
+      (EtaleCounterexample.GeometricMorphism.directImage.{u + 1, u, u + 1, u + 1}
+        (EtaleCounterexample.etalePoint.{u} (EtaleCounterexample.multiplicativeGroupPoint.{u} k Ω w))))
+  (hγ :
+    EtaleCounterexample.RelativeCompatible.{u + 1, u, u + 1, u + 1, u + 1, u + 1}
+      (EtaleCounterexample.relativeEtalePoint.{u} (EtaleCounterexample.multiplicativeGroupStructure.{u} k)
+        (EtaleCounterexample.multiplicativeGroupPoint.{u} k Ω z) ⋯)
+      (EtaleCounterexample.relativeEtalePoint.{u} (EtaleCounterexample.multiplicativeGroupStructure.{u} k)
+        (EtaleCounterexample.multiplicativeGroupPoint.{u} k Ω w) ⋯)
+      γ) :
+  Eq.{u + 1} z w
+EtaleCounterexample.etaleDirectImageCompIso.{u} {X Y Z : AlgebraicGeometry.Scheme.{u}} (f : Quiver.Hom.{u, u + 1} X Y)
+  (g : Quiver.Hom.{u, u + 1} Y Z) :
+  CategoryTheory.Iso.{u + 1, u + 1}
+    (CategoryTheory.Functor.comp.{u + 1, u + 1, u + 1, u + 1, u + 1, u + 1} (EtaleCounterexample.etaleDirectImage.{u} f)
+      (EtaleCounterexample.etaleDirectImage.{u} g))
+    (EtaleCounterexample.etaleDirectImage.{u} (CategoryTheory.CategoryStruct.comp.{u, u + 1} f g))
+EtaleCounterexample.relativeAffineEtaleMorphism.{u} {X S : AlgebraicGeometry.Scheme.{u}} {R : CommRingCat.{u}}
+  (f : Quiver.Hom.{u, u + 1} X (AlgebraicGeometry.Spec.{u} R)) (π : Quiver.Hom.{u, u + 1} X S)
+  (ρ : Quiver.Hom.{u, u + 1} (AlgebraicGeometry.Spec.{u} R) S)
+  (h : Eq.{u + 1} (CategoryTheory.CategoryStruct.comp.{u, u + 1} f ρ) π) :
+  EtaleCounterexample.RelativeMorphism.{u + 1, u + 1, u + 1, u + 1, u + 1, u + 1}
+    (EtaleCounterexample.etaleDirectImage.{u} π) (EtaleCounterexample.etaleDirectImage.{u} ρ)
+'EtaleCounterexample.skyscraperFiberMap_projection' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.skyscraperFiberMap_naturality' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.relativePointIso_preserves_baseLifts' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.etaleFiberTransformation_mem_open' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.etaleFiberTransformation_reflects_zero' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.coordinateDifference_value' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.exists_finiteEtale_coordinate' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.relative_multiplicativeGroupPoint_eq' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.etaleDirectImageCompIso' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.relativeAffineEtaleMorphism' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+EtaleCounterexample.finiteField_counterexample.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k],
+  ∃ T,
+    EtaleCounterexample.IsRelativeEquivalence.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} T ∧
+      EtaleCounterexample.GeometricMorphism.IsPinned.{u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.RelativeMorphism.geometric.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} T) ∧
+        ∀
+          (a :
+            CategoryTheory.End.{u_1 + 1, u_1 + 1}
+              (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+                (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+                  (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+                (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))),
+          Ne.{u_1 + 2} (EtaleCounterexample.relativeEndomorphismClass.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} T)
+            ((EtaleCounterexample.finiteFieldEtaleEndomorphismHom.{u_1} k) a)
+EtaleCounterexample.arithmetic_counterexample : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)],
+  ∃ T,
+    EtaleCounterexample.IsRelativeEquivalence.{1, 1, 1, 1, 1, 1} T ∧
+      EtaleCounterexample.GeometricMorphism.IsPinned.{0, 1, 1, 1, 1}
+          (EtaleCounterexample.RelativeMorphism.geometric.{1, 1, 1, 1, 1, 1} T) ∧
+        ∀
+          (a :
+            CategoryTheory.End.{1, 1}
+              (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+                (CategoryTheory.MorphismProperty.Q.{0, 1}
+                  (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+                (EtaleCounterexample.arithmeticMultiplicativeGroup p))),
+          Ne.{2} (EtaleCounterexample.relativeEndomorphismClass.{1, 1, 1, 1} T)
+            ((EtaleCounterexample.arithmeticEtaleEndomorphismHom p) a)
+EtaleCounterexample.localizedEtaleEndomorphismHom.{u_1} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    (p : ℕ) →
+      [Fact (Nat.Prime p)] →
+        [CharP.{u_1} k p] →
+          MonoidHom.{u_1 + 1, u_1 + 1}
+            (CategoryTheory.End.{u_1 + 1, u_1 + 1}
+              (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+                (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+                  (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+                (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k)))
+            (EtaleCounterexample.RelativeEndomorphismClass.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+              (EtaleCounterexample.etaleDirectImage.{u_1} (EtaleCounterexample.multiplicativeGroupStructure.{u_1} k)))
+EtaleCounterexample.finiteFieldEtaleEndomorphismHom.{u_1} : (k : Type u_1) →
+  [inst : Field.{u_1} k] →
+    [Fintype.{u_1} k] →
+      MonoidHom.{u_1 + 1, u_1 + 1}
+        (CategoryTheory.End.{u_1 + 1, u_1 + 1}
+          (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+            (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+              (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+            (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k)))
+        (EtaleCounterexample.RelativeEndomorphismClass.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.etaleDirectImage.{u_1} (EtaleCounterexample.multiplicativeGroupStructure.{u_1} k)))
+EtaleCounterexample.arithmeticEtaleEndomorphismHom : (p : ℕ) →
+  [Fact (Nat.Prime p)] →
+    MonoidHom.{1, 1}
+      (CategoryTheory.End.{1, 1}
+        (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+          (CategoryTheory.MorphismProperty.Q.{0, 1}
+            (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+          (EtaleCounterexample.arithmeticMultiplicativeGroup p)))
+      (EtaleCounterexample.RelativeEndomorphismClass.{1, 1, 1, 1}
+        (EtaleCounterexample.arithmeticMultiplicativeGroupStructure p))
+EtaleCounterexample.localizedEtaleEndomorphismHom_map.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ)
+  [inst_1 : Fact (Nat.Prime p)] [inst_2 : CharP.{u_1} k p]
+  (f :
+    Quiver.Hom.{u_1, u_1 + 1} (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k)
+      (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k)),
+  Eq.{u_1 + 2}
+    ((EtaleCounterexample.localizedEtaleEndomorphismHom.{u_1} k p)
+      (CategoryTheory.Functor.map.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        f))
+    (EtaleCounterexample.relativeEndomorphismClass.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.relativeMultiplicativeGroupMorphism.{u_1} k
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k) f))
+EtaleCounterexample.localizedEtaleEndomorphism_independent.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ)
+  [inst_1 : Fact (Nat.Prime p)] [inst_2 : CharP.{u_1} k p]
+  {a :
+    Quiver.Hom.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))}
+  (r : EtaleCounterexample.MultiplicativeGroupLocalizedRoof.{u_1} k a),
+  EtaleCounterexample.RelativelyIsomorphic.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.localizedEtaleEndomorphism.{u_1} k p a)
+    (EtaleCounterexample.MultiplicativeGroupLocalizedRoof.etaleMorphism.{u_1} k p r)
+EtaleCounterexample.localizedEtaleRealization_unique.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ)
+  [Fact (Nat.Prime p)] [CharP.{u_1} k p]
+  (a :
+    Quiver.Hom.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k)))
+  (T₁ T₂ :
+    EtaleCounterexample.RelativeMorphism.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.etaleDirectImage.{u_1} (EtaleCounterexample.multiplicativeGroupStructure.{u_1} k))
+      (EtaleCounterexample.etaleDirectImage.{u_1} (EtaleCounterexample.multiplicativeGroupStructure.{u_1} k))),
+  EtaleCounterexample.IsInducedByLocalizedEndomorphism.{u_1} k a T₁ →
+    EtaleCounterexample.IsInducedByLocalizedEndomorphism.{u_1} k a T₂ →
+      EtaleCounterexample.RelativelyIsomorphic.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} T₁ T₂
+EtaleCounterexample.localizedEtaleEndomorphism_comp.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ)
+  [inst_1 : Fact (Nat.Prime p)] [inst_2 : CharP.{u_1} k p]
+  (a b :
+    Quiver.Hom.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))),
+  EtaleCounterexample.RelativelyIsomorphic.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.localizedEtaleEndomorphism.{u_1} k p
+      (CategoryTheory.CategoryStruct.comp.{u_1 + 1, u_1 + 1} a b))
+    (EtaleCounterexample.RelativeMorphism.comp.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.localizedEtaleEndomorphism.{u_1} k p a)
+      (EtaleCounterexample.localizedEtaleEndomorphism.{u_1} k p b))
+EtaleCounterexample.localizedEtaleEndomorphism_id.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ)
+  [inst_1 : Fact (Nat.Prime p)] [inst_2 : CharP.{u_1} k p],
+  EtaleCounterexample.RelativelyIsomorphic.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.localizedEtaleEndomorphism.{u_1} k p
+      (CategoryTheory.CategoryStruct.id.{u_1 + 1, u_1 + 1}
+        (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+            (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+          (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))))
+    (EtaleCounterexample.identityTwist.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.etaleDirectImage.{u_1} (EtaleCounterexample.multiplicativeGroupStructure.{u_1} k))
+      (CategoryTheory.Iso.refl.{u_1 + 1, u_1 + 1}
+        (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.EtaleTopos.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))))
+EtaleCounterexample.localizedEtaleEndomorphism_map.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k] (p : ℕ)
+  [inst_1 : Fact (Nat.Prime p)] [inst_2 : CharP.{u_1} k p]
+  (f :
+    Quiver.Hom.{u_1, u_1 + 1} (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k)
+      (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k)),
+  EtaleCounterexample.RelativelyIsomorphic.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.localizedEtaleEndomorphism.{u_1} k p
+      (CategoryTheory.Functor.map.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        f))
+    (EtaleCounterexample.relativeMultiplicativeGroupMorphism.{u_1} k
+      (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k) f)
+@EtaleCounterexample.relativeAffineEtaleIdentity.{u_1} : ∀ {S : AlgebraicGeometry.Scheme.{u_1}} {R : CommRingCat.{u_1}}
+  (π : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} R) S),
+  EtaleCounterexample.RelativeCompatible.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.relativeAffineEtaleMorphism.{u_1}
+      (CategoryTheory.CategoryStruct.id.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} R)) π π ⋯)
+    (EtaleCounterexample.identityTwist.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.etaleDirectImage.{u_1} π)
+      (CategoryTheory.Iso.refl.{u_1 + 1, u_1 + 1}
+        (CategoryTheory.Functor.id.{u_1 + 1, u_1 + 1} (EtaleCounterexample.EtaleTopos.{u_1} S))))
+    (EtaleCounterexample.etaleDirectImageIdIso.{u_1} (AlgebraicGeometry.Spec.{u_1} R))
+@EtaleCounterexample.etaleDirectImage_composition_coherence.{u_1} : ∀ {X Y Z S : AlgebraicGeometry.Scheme.{u_1}}
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y) (g : Quiver.Hom.{u_1, u_1 + 1} Y Z) (h : Quiver.Hom.{u_1, u_1 + 1} Z S)
+  (fg : Quiver.Hom.{u_1, u_1 + 1} X Z) (π : Quiver.Hom.{u_1, u_1 + 1} X S) (ρ : Quiver.Hom.{u_1, u_1 + 1} Y S)
+  (hfg : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} f g) fg)
+  (hρ : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} g h) ρ)
+  (hfρ : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} f ρ) π)
+  (hfgh : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} fg h) π)
+  (M : EtaleCounterexample.EtaleTopos.{u_1} X),
+  Eq.{u_1 + 2}
+    (CategoryTheory.CategoryStruct.comp.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.map.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} (EtaleCounterexample.etaleDirectImage.{u_1} h)
+        (CategoryTheory.NatTrans.app.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etaleDirectImageCompIsoOfEq.{u_1} f g hfg))
+          M))
+      (CategoryTheory.NatTrans.app.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etaleDirectImageCompIsoOfEq.{u_1} fg h hfgh))
+        M))
+    (CategoryTheory.CategoryStruct.comp.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.NatTrans.app.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etaleDirectImageCompIsoOfEq.{u_1} g h hρ))
+        (CategoryTheory.Functor.obj.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} (EtaleCounterexample.etaleDirectImage.{u_1} f)
+          M))
+      (CategoryTheory.NatTrans.app.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.Iso.hom.{u_1 + 1, u_1 + 1} (EtaleCounterexample.etaleDirectImageCompIsoOfEq.{u_1} f ρ hfρ)) M))
+@EtaleCounterexample.relativeAffineEtaleMorphism_postcompose.{u_1} : ∀ {X Y Z : AlgebraicGeometry.Scheme.{u_1}}
+  {R : CommRingCat.{u_1}} (f : Quiver.Hom.{u_1, u_1 + 1} X (AlgebraicGeometry.Spec.{u_1} R))
+  (π : Quiver.Hom.{u_1, u_1 + 1} X Y) (ρ : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} R) Y)
+  (hf : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} f ρ) π) (i : Quiver.Hom.{u_1, u_1 + 1} Y Z)
+  (π' : Quiver.Hom.{u_1, u_1 + 1} X Z) (hπ : Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} π i) π'),
+  EtaleCounterexample.RelativeCompatible.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+    (EtaleCounterexample.RelativeMorphism.changeStructure.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.RelativeMorphism.postcompose.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1,
+          u_1 + 1}
+        (EtaleCounterexample.relativeAffineEtaleMorphism.{u_1} f π ρ hf) (EtaleCounterexample.etaleDirectImage.{u_1} i))
+      (EtaleCounterexample.etaleDirectImageCompIsoOfEq.{u_1} π i hπ)
+      (EtaleCounterexample.etaleDirectImageCompIso.{u_1} ρ i))
+    (EtaleCounterexample.relativeAffineEtaleMorphism.{u_1} f π' (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} ρ i)
+      ⋯)
+    (CategoryTheory.Iso.refl.{u_1 + 1, u_1 + 1}
+      (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (EtaleCounterexample.RelativeMorphism.geometric.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.RelativeMorphism.changeStructure.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+            (EtaleCounterexample.RelativeMorphism.postcompose.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1,
+                u_1 + 1, u_1 + 1}
+              (EtaleCounterexample.relativeAffineEtaleMorphism.{u_1} f π ρ hf)
+              (EtaleCounterexample.etaleDirectImage.{u_1} i))
+            (EtaleCounterexample.etaleDirectImageCompIsoOfEq.{u_1} π i hπ)
+            (EtaleCounterexample.etaleDirectImageCompIso.{u_1} ρ i)))))
+EtaleCounterexample.localizedRoofs_common_refinement.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k]
+  {a :
+    Quiver.Hom.{u_1 + 1, u_1 + 1}
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))
+      (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+        (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+          (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+        (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))}
+  (r₁ r₂ : EtaleCounterexample.MultiplicativeGroupLocalizedRoof.{u_1} k a),
+  ∃ P t₁ t₂,
+    Eq.{u_1 + 1}
+        (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} t₁
+          (EtaleCounterexample.MultiplicativeGroupLocalizedRoof.denominator.{u_1} r₁))
+        (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} t₂
+          (EtaleCounterexample.MultiplicativeGroupLocalizedRoof.denominator.{u_1} r₂)) ∧
+      Eq.{u_1 + 1}
+          (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} t₁
+            (EtaleCounterexample.MultiplicativeGroupLocalizedRoof.numerator.{u_1} r₁))
+          (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} t₂
+            (EtaleCounterexample.MultiplicativeGroupLocalizedRoof.numerator.{u_1} r₂)) ∧
+        EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)
+          (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} t₁
+            (EtaleCounterexample.MultiplicativeGroupLocalizedRoof.denominator.{u_1} r₁))
+EtaleCounterexample.relativeUH_equalizer.{u_1} : ∀ (S : AlgebraicGeometry.Scheme.{u_1})
+  [AlgebraicGeometry.IsNoetherian.{u_1} S] {X Y Y' : EtaleCounterexample.FiniteTypeSchemes.{u_1} S}
+  (f₁ f₂ : Quiver.Hom.{u_1, u_1 + 1} X Y) (s : Quiver.Hom.{u_1, u_1 + 1} Y Y'),
+  EtaleCounterexample.relativeUH.{u_1} S s →
+    Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} f₁ s)
+        (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} f₂ s) →
+      ∃ X' t,
+        EtaleCounterexample.relativeUH.{u_1} S t ∧
+          Eq.{u_1 + 1} (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} t f₁)
+            (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} t f₂)
+@EtaleCounterexample.universalHomeomorphism_diagonal.{u_1} : ∀ {X Y : AlgebraicGeometry.Scheme.{u_1}}
+  (f : Quiver.Hom.{u_1, u_1 + 1} X Y),
+  EtaleCounterexample.universalHomeomorphisms.{u_1} f →
+    EtaleCounterexample.universalHomeomorphisms.{u_1} (CategoryTheory.Limits.pullback.diagonal.{u_1, u_1 + 1} f)
+EtaleCounterexample.relativePoint_eq_of_baseEtale_coordinate.{u_1} : ∀ (k Ω : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Field.{u_1} Ω] [inst_2 : IsSepClosed.{u_1} Ω] [inst_3 : Algebra.{u_1, u_1} k Ω]
+  {Y : AlgebraicGeometry.Scheme.{u_1}}
+  (π : Quiver.Hom.{u_1, u_1 + 1} (EtaleCounterexample.multiplicativeGroup.{u_1} k) Y)
+  (ω : Quiver.Hom.{u_1, u_1 + 1} (AlgebraicGeometry.Spec.{u_1} ↧Ω) Y) (U : AlgebraicGeometry.Scheme.Etale.{u_1} Y)
+  (l :
+    CategoryTheory.Functor.obj.{u_1, u_1, u_1 + 1, u_1 + 1}
+      (CategoryTheory.GrothendieckTopology.Point.fiber.{u_1, u_1, u_1 + 1}
+        (AlgebraicGeometry.Scheme.pointSmallEtale.{u_1} ω))
+      U)
+  (r :
+    ↑(CategoryTheory.Functor.obj.{u_1, u_1, u_1, u_1 + 1}
+        (AlgebraicGeometry.PresheafedSpace.presheaf.{u_1, u_1 + 1, u_1}
+          (AlgebraicGeometry.SheafedSpace.toPresheafedSpace.{u_1 + 1, u_1, u_1}
+            (AlgebraicGeometry.LocallyRingedSpace.toSheafedSpace.{u_1}
+              (AlgebraicGeometry.Scheme.toLocallyRingedSpace.{u_1}
+                (CategoryTheory.Comma.left.{u_1, 0, u_1, u_1 + 1, 0, u_1 + 1}
+                  (CategoryTheory.MorphismProperty.Comma.toComma.{u_1, u_1 + 1, 0, 0, u_1, u_1 + 1} U))))))
+        (Opposite.op.{u_1 + 1} Top.top.{u_1})))
+  (z w : Units.{u_1} Ω),
+  Eq.{u_1 + 1} (EtaleCounterexample.geometricSectionValue.{u_1} (CategoryTheory.Over.Hom.left.{u_1, u_1 + 1} l) r) ↑z →
+    ∀
+      (hz :
+        Eq.{u_1 + 1}
+          (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω z)
+            π)
+          ω)
+      (hw :
+        Eq.{u_1 + 1}
+          (CategoryTheory.CategoryStruct.comp.{u_1, u_1 + 1} (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω w)
+            π)
+          ω)
+      (γ :
+        CategoryTheory.Iso.{u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+            (EtaleCounterexample.etalePoint.{u_1} (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω z)))
+          (EtaleCounterexample.GeometricMorphism.directImage.{u_1 + 1, u_1, u_1 + 1, u_1 + 1}
+            (EtaleCounterexample.etalePoint.{u_1} (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω w)))),
+      EtaleCounterexample.RelativeCompatible.{u_1 + 1, u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.relativeEtalePoint.{u_1} π (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω z) hz)
+          (EtaleCounterexample.relativeEtalePoint.{u_1} π (EtaleCounterexample.multiplicativeGroupPoint.{u_1} k Ω w) hw)
+          γ →
+        Eq.{u_1 + 1} z w
+EtaleCounterexample.integerFrobeniusEtalePair_hasMap : ∀ (p n : ℕ) [inst : Fact (Nat.Prime p)] (hn : Ne.{1} n 0)
+  (Ω : Type) [inst_1 : Field.{0} Ω] [CharP.{0} Ω p] (z : Ω),
+  Eq.{1} (HPow.hPow.{0, 0, 0} z (HPow.hPow.{0, 0, 0} p n)) z →
+    StandardEtalePair.HasMap.{0, 0} (EtaleCounterexample.integerFrobeniusEtalePair p n hn) z
+EtaleCounterexample.arithmetic_exists_etale_coordinate : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)] (Ω : Type)
+  [inst_1 : Field.{0} Ω] [inst_2 : IsSepClosed.{0} Ω] [inst_3 : Algebra.{0, 0} (ZMod p) Ω]
+  [Algebra.IsAlgebraic.{0, 0} (ZMod p) Ω] [CharP.{0} Ω p] (z : Ω),
+  ∃ U l r, Eq.{1} (EtaleCounterexample.geometricSectionValue.{0} (CategoryTheory.Over.Hom.left.{0, 1} l) r) z
+EtaleCounterexample.arithmetic_relative_multiplicativeGroupPoint_eq : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)] (Ω : Type)
+  [inst_1 : Field.{0} Ω] [inst_2 : IsSepClosed.{0} Ω] [inst_3 : Algebra.{0, 0} (ZMod p) Ω]
+  [Algebra.IsAlgebraic.{0, 0} (ZMod p) Ω] [CharP.{0} Ω p] (z w : Units.{0} Ω)
+  (γ :
+    CategoryTheory.Iso.{1, 1}
+      (EtaleCounterexample.GeometricMorphism.directImage.{1, 0, 1, 1}
+        (EtaleCounterexample.etalePoint.{0} (EtaleCounterexample.multiplicativeGroupPoint.{0} (ZMod p) Ω z)))
+      (EtaleCounterexample.GeometricMorphism.directImage.{1, 0, 1, 1}
+        (EtaleCounterexample.etalePoint.{0} (EtaleCounterexample.multiplicativeGroupPoint.{0} (ZMod p) Ω w)))),
+  EtaleCounterexample.RelativeCompatible.{1, 0, 1, 1, 1, 1}
+      (EtaleCounterexample.relativeEtalePoint.{0}
+        (CategoryTheory.CategoryStruct.comp.{0, 1} (EtaleCounterexample.multiplicativeGroupStructure.{0} (ZMod p))
+          (EtaleCounterexample.primeBase p))
+        (EtaleCounterexample.multiplicativeGroupPoint.{0} (ZMod p) Ω z) ⋯)
+      (EtaleCounterexample.relativeEtalePoint.{0}
+        (CategoryTheory.CategoryStruct.comp.{0, 1} (EtaleCounterexample.multiplicativeGroupStructure.{0} (ZMod p))
+          (EtaleCounterexample.primeBase p))
+        (EtaleCounterexample.multiplicativeGroupPoint.{0} (ZMod p) Ω w) ⋯)
+      γ →
+    Eq.{1} z w
+EtaleCounterexample.arithmetic_postcompose_point_eq : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)] (Ω : Type)
+  [inst_1 : Field.{0} Ω] [inst_2 : IsAlgClosed.{0} Ω] [inst_3 : Algebra.{0, 0} (ZMod p) Ω]
+  [Algebra.IsAlgebraic.{0, 0} (ZMod p) Ω] [CharP.{0} Ω p] (z w : Units.{0} Ω)
+  (γ :
+    CategoryTheory.Iso.{1, 1}
+      (EtaleCounterexample.GeometricMorphism.directImage.{1, 0, 1, 1}
+        (EtaleCounterexample.etalePoint.{0} (EtaleCounterexample.multiplicativeGroupPoint.{0} (ZMod p) Ω z)))
+      (EtaleCounterexample.GeometricMorphism.directImage.{1, 0, 1, 1}
+        (EtaleCounterexample.etalePoint.{0} (EtaleCounterexample.multiplicativeGroupPoint.{0} (ZMod p) Ω w)))),
+  EtaleCounterexample.RelativeCompatible.{1, 0, 1, 1, 1, 1}
+      (EtaleCounterexample.RelativeMorphism.postcompose.{1, 0, 1, 1, 1, 1, 1, 1}
+        (EtaleCounterexample.relativeEtalePoint.{0} (EtaleCounterexample.multiplicativeGroupStructure.{0} (ZMod p))
+          (EtaleCounterexample.multiplicativeGroupPoint.{0} (ZMod p) Ω z) ⋯)
+        (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p)))
+      (EtaleCounterexample.RelativeMorphism.postcompose.{1, 0, 1, 1, 1, 1, 1, 1}
+        (EtaleCounterexample.relativeEtalePoint.{0} (EtaleCounterexample.multiplicativeGroupStructure.{0} (ZMod p))
+          (EtaleCounterexample.multiplicativeGroupPoint.{0} (ZMod p) Ω w) ⋯)
+        (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p)))
+      γ →
+    Eq.{1} z w
+EtaleCounterexample.arithmetic_relative_roof_twist_pointAction : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)] (Ω : Type)
+  [inst_1 : Field.{0} Ω] [IsAlgClosed.{0} Ω] [inst_3 : Algebra.{0, 0} (ZMod p) Ω]
+  [inst_4 : Algebra.IsAlgebraic.{0, 0} (ZMod p) Ω] [CharP.{0} Ω p]
+  (Z : EtaleCounterexample.FiniteTypeSchemes.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p)))
+  (s f : Quiver.Hom.{0, 1} Z (EtaleCounterexample.multiplicativeGroupFiniteType.{0} (ZMod p)))
+  (γ :
+    CategoryTheory.Iso.{1, 1}
+      (EtaleCounterexample.GeometricMorphism.directImage.{1, 1, 1, 1}
+        (EtaleCounterexample.RelativeMorphism.geometric.{1, 1, 1, 1, 1, 1}
+          (EtaleCounterexample.RelativeMorphism.comp.{1, 1, 1, 1, 1, 1, 1, 1}
+            (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+              (EtaleCounterexample.relativeMultiplicativeGroupMorphism.{0} (ZMod p) Z s)
+              (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p)))
+            (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+              (EtaleCounterexample.nonintegralTwist.{0} (ZMod p)
+                (EtaleCounterexample.multiplicativeGroupStructure.{0} (ZMod p)))
+              (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p))))))
+      (EtaleCounterexample.GeometricMorphism.directImage.{1, 1, 1, 1}
+        (EtaleCounterexample.RelativeMorphism.geometric.{1, 1, 1, 1, 1, 1}
+          (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+            (EtaleCounterexample.relativeMultiplicativeGroupMorphism.{0} (ZMod p) Z f)
+            (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p)))))),
+  EtaleCounterexample.RelativeCompatible.{1, 1, 1, 1, 1, 1}
+      (EtaleCounterexample.RelativeMorphism.comp.{1, 1, 1, 1, 1, 1, 1, 1}
+        (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+          (EtaleCounterexample.relativeMultiplicativeGroupMorphism.{0} (ZMod p) Z s)
+          (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p)))
+        (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+          (EtaleCounterexample.nonintegralTwist.{0} (ZMod p)
+            (EtaleCounterexample.multiplicativeGroupStructure.{0} (ZMod p)))
+          (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p))))
+      (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+        (EtaleCounterexample.relativeMultiplicativeGroupMorphism.{0} (ZMod p) Z f)
+        (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p)))
+      γ →
+    ∀ (z : Units.{0} Ω)
+      (l :
+        Quiver.Hom.{0, 1} (AlgebraicGeometry.Spec.{0} ↧Ω)
+          (CategoryTheory.Comma.left.{0, 0, 0, 1, 0, 1}
+            (CategoryTheory.MorphismProperty.Comma.toComma.{0, 1, 0, 0, 0, 1} Z))),
+      Eq.{1}
+          (CategoryTheory.CategoryStruct.comp.{0, 1} l
+            (CategoryTheory.CommaMorphism.left.{0, 0, 0, 1, 0, 1}
+              (CategoryTheory.MorphismProperty.Comma.Hom.toCommaMorphism.{0, 1, 0, 0, 0, 1} s)))
+          (EtaleCounterexample.multiplicativeGroupPoint.{0} (ZMod p) Ω z) →
+        Eq.{1}
+          ((CommRingCat.Hom.hom.{0}
+              (AlgebraicGeometry.Spec.preimage.{0}
+                (CategoryTheory.CategoryStruct.comp.{0, 1} l
+                  (CategoryTheory.CommaMorphism.left.{0, 0, 0, 1, 0, 1}
+                    (CategoryTheory.MorphismProperty.Comma.Hom.toCommaMorphism.{0, 1, 0, 0, 0, 1} f)))))
+            (LaurentPolynomial.T.{0} 1))
+          ((EtaleCounterexample.nonintegralFieldAutomorphism.{0, 0} (ZMod p) Ω) ↑z)
+EtaleCounterexample.arithmetic_nonintegralTwist_no_relative_roof : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)] (Ω : Type)
+  [inst_1 : Field.{0} Ω] [IsAlgClosed.{0} Ω] [inst_3 : Algebra.{0, 0} (ZMod p) Ω]
+  [Algebra.IsAlgebraic.{0, 0} (ZMod p) Ω] [CharP.{0} Ω p]
+  (Z : EtaleCounterexample.FiniteTypeSchemes.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p)))
+  (s f : Quiver.Hom.{0, 1} Z (EtaleCounterexample.multiplicativeGroupFiniteType.{0} (ZMod p))),
+  EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p)) s →
+    ¬∃ γ,
+        EtaleCounterexample.RelativeCompatible.{1, 1, 1, 1, 1, 1}
+          (EtaleCounterexample.RelativeMorphism.comp.{1, 1, 1, 1, 1, 1, 1, 1}
+            (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+              (EtaleCounterexample.relativeMultiplicativeGroupMorphism.{0} (ZMod p) Z s)
+              (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p)))
+            (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+              (EtaleCounterexample.nonintegralTwist.{0} (ZMod p)
+                (EtaleCounterexample.multiplicativeGroupStructure.{0} (ZMod p)))
+              (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p))))
+          (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+            (EtaleCounterexample.relativeMultiplicativeGroupMorphism.{0} (ZMod p) Z f)
+            (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p)))
+          γ
+EtaleCounterexample.arithmetic_counterexample_roofForm : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)],
+  ∃ T,
+    EtaleCounterexample.IsRelativeEquivalence.{1, 1, 1, 1, 1, 1} T ∧
+      EtaleCounterexample.GeometricMorphism.IsPinned.{0, 1, 1, 1, 1}
+          (EtaleCounterexample.RelativeMorphism.geometric.{1, 1, 1, 1, 1, 1} T) ∧
+        ∀
+          (a :
+            Quiver.Hom.{1, 1}
+              (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+                (CategoryTheory.MorphismProperty.Q.{0, 1}
+                  (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+                (EtaleCounterexample.arithmeticMultiplicativeGroup p))
+              (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+                (CategoryTheory.MorphismProperty.Q.{0, 1}
+                  (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+                (EtaleCounterexample.arithmeticMultiplicativeGroup p))),
+          ¬EtaleCounterexample.IsInducedByArithmeticLocalizedEndomorphism p a T
+EtaleCounterexample.arithmeticLocalizedEndomorphism_has_etaleRealization : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)]
+  (a :
+    Quiver.Hom.{1, 1}
+      (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+        (CategoryTheory.MorphismProperty.Q.{0, 1} (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+        (EtaleCounterexample.arithmeticMultiplicativeGroup p))
+      (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+        (CategoryTheory.MorphismProperty.Q.{0, 1} (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+        (EtaleCounterexample.arithmeticMultiplicativeGroup p))),
+  ∃ T, EtaleCounterexample.IsInducedByArithmeticLocalizedEndomorphism p a T
+EtaleCounterexample.arithmeticRoofAsFiniteFieldRoof : (p : ℕ) →
+  [inst : Fact (Nat.Prime p)] →
+    (a :
+        CategoryTheory.End.{1, 1}
+          (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+            (CategoryTheory.MorphismProperty.Q.{0, 1}
+              (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+            (EtaleCounterexample.arithmeticMultiplicativeGroup p))) →
+      (Z : EtaleCounterexample.FiniteTypeSchemes.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)) →
+        (s f : Quiver.Hom.{0, 1} Z (EtaleCounterexample.arithmeticMultiplicativeGroup p)) →
+          EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ) s →
+            Eq.{2}
+                (CategoryTheory.CategoryStruct.comp.{1, 1}
+                  (CategoryTheory.Functor.map.{0, 1, 1, 1}
+                    (CategoryTheory.MorphismProperty.Q.{0, 1}
+                      (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+                    s)
+                  a)
+                (CategoryTheory.Functor.map.{0, 1, 1, 1}
+                  (CategoryTheory.MorphismProperty.Q.{0, 1}
+                    (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+                  f) →
+              EtaleCounterexample.MultiplicativeGroupLocalizedRoof.{0} (ZMod p)
+                ((Equiv.symm.{2, 2}
+                    (EtaleCounterexample.primeFieldFiniteTypeHomEquiv p
+                      (EtaleCounterexample.multiplicativeGroupFiniteType.{0} (ZMod p))
+                      (EtaleCounterexample.multiplicativeGroupFiniteType.{0} (ZMod p))))
+                  a)
+EtaleCounterexample.arithmeticEtaleEndomorphismHom_roof : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)]
+  (a :
+    CategoryTheory.End.{1, 1}
+      (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+        (CategoryTheory.MorphismProperty.Q.{0, 1} (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+        (EtaleCounterexample.arithmeticMultiplicativeGroup p)))
+  (Z : EtaleCounterexample.FiniteTypeSchemes.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ))
+  (s f : Quiver.Hom.{0, 1} Z (EtaleCounterexample.arithmeticMultiplicativeGroup p))
+  (hs : EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ) s)
+  (ha :
+    Eq.{2}
+      (CategoryTheory.CategoryStruct.comp.{1, 1}
+        (CategoryTheory.Functor.map.{0, 1, 1, 1}
+          (CategoryTheory.MorphismProperty.Q.{0, 1}
+            (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+          s)
+        a)
+      (CategoryTheory.Functor.map.{0, 1, 1, 1}
+        (CategoryTheory.MorphismProperty.Q.{0, 1} (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+        f)),
+  Eq.{2} ((EtaleCounterexample.arithmeticEtaleEndomorphismHom p) a)
+    (EtaleCounterexample.relativeEndomorphismClass.{1, 1, 1, 1}
+      (EtaleCounterexample.RelativeMorphism.postcompose.{1, 1, 1, 1, 1, 1, 1, 1}
+        (EtaleCounterexample.MultiplicativeGroupLocalizedRoof.etaleMorphism.{0} (ZMod p) p
+          (EtaleCounterexample.arithmeticRoofAsFiniteFieldRoof p a Z s f hs ha))
+        (EtaleCounterexample.etaleDirectImage.{0} (EtaleCounterexample.primeBase p))))
+EtaleCounterexample.primeFieldFiniteTypeHomEquiv_map : ∀ (p : ℕ)
+  {X Y : EtaleCounterexample.FiniteTypeSchemes.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p))} (f : Quiver.Hom.{0, 1} X Y),
+  Eq.{2}
+    ((EtaleCounterexample.primeFieldFiniteTypeHomEquiv p X Y)
+      (CategoryTheory.Functor.map.{0, 1, 1, 1}
+        (CategoryTheory.MorphismProperty.Q.{0, 1}
+          (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p))))
+        f))
+    (CategoryTheory.Functor.map.{0, 1, 1, 1}
+      (CategoryTheory.MorphismProperty.Q.{0, 1} (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+      (CategoryTheory.Functor.map.{0, 0, 1, 1} (EtaleCounterexample.inclusion.{0} (EtaleCounterexample.primeBase p)) f))
+EtaleCounterexample.primeFieldEndomorphismEquiv : (p : ℕ) →
+  (X : EtaleCounterexample.FiniteTypeSchemes.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p))) →
+    MulEquiv.{1, 1}
+      (CategoryTheory.End.{1, 1}
+        (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+          (CategoryTheory.MorphismProperty.Q.{0, 1}
+            (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧(ZMod p))))
+          X))
+      (CategoryTheory.End.{1, 1}
+        (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+          (CategoryTheory.MorphismProperty.Q.{0, 1}
+            (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+          (CategoryTheory.Functor.obj.{0, 0, 1, 1} (EtaleCounterexample.inclusion.{0} (EtaleCounterexample.primeBase p))
+            X)))
+EtaleCounterexample.arithmeticMultiplicativeGroupEtaleMorphism : (p : ℕ) →
+  EtaleCounterexample.GeometricMorphism.{1, 1, 1, 1}
+    (EtaleCounterexample.EtaleTopos.{0} (EtaleCounterexample.multiplicativeGroup.{0} (ZMod p)))
+    (EtaleCounterexample.EtaleTopos.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ))
+@EtaleCounterexample.RelativeEndomorphismClass.{u_1, u_2, u_3,
+    u_4} : {E : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} E] →
+    {B : Type u_3} →
+      [inst_1 : CategoryTheory.Category.{u_4, u_3} B] →
+        CategoryTheory.Functor.{u_2, u_4, u_1, u_3} E B → Type (max (max u_1 u_2) u_4)
+@EtaleCounterexample.relativeEndomorphismPostcompose.{u_1, u_2, u_3, u_4, u_5,
+    u_6} : {E : Type u_1} →
+  [inst : CategoryTheory.Category.{u_2, u_1} E] →
+    {B : Type u_3} →
+      [inst_1 : CategoryTheory.Category.{u_4, u_3} B] →
+        {C : Type u_5} →
+          [inst_2 : CategoryTheory.Category.{u_6, u_5} C] →
+            (π : CategoryTheory.Functor.{u_2, u_4, u_1, u_3} E B) →
+              (J : CategoryTheory.Functor.{u_4, u_6, u_3, u_5} B C) →
+                MonoidHom.{max (max u_4 u_2) u_1, max (max u_6 u_2) u_1}
+                  (EtaleCounterexample.RelativeEndomorphismClass.{u_1, u_2, u_3, u_4} π)
+                  (EtaleCounterexample.RelativeEndomorphismClass.{u_1, u_2, u_5, u_6}
+                    (CategoryTheory.Functor.comp.{u_2, u_4, u_6, u_1, u_3, u_5} π J))
+'EtaleCounterexample.finiteField_counterexample' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.arithmetic_counterexample' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.localizedEtaleEndomorphismHom' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.finiteFieldEtaleEndomorphismHom' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.arithmeticEtaleEndomorphismHom' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.localizedEtaleEndomorphismHom_map' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.localizedEtaleEndomorphism_independent' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.localizedEtaleRealization_unique' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.localizedEtaleEndomorphism_comp' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.localizedEtaleEndomorphism_id' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.localizedEtaleEndomorphism_map' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.relativeAffineEtaleIdentity' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.etaleDirectImage_composition_coherence' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.relativeAffineEtaleMorphism_postcompose' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.localizedRoofs_common_refinement' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.relativeUH_equalizer' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.universalHomeomorphism_diagonal' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.relativePoint_eq_of_baseEtale_coordinate' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.integerFrobeniusEtalePair_hasMap' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.arithmetic_exists_etale_coordinate' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.arithmetic_relative_multiplicativeGroupPoint_eq' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.arithmetic_postcompose_point_eq' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.arithmetic_relative_roof_twist_pointAction' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.arithmetic_nonintegralTwist_no_relative_roof' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.arithmetic_counterexample_roofForm' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.arithmeticLocalizedEndomorphism_has_etaleRealization' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.arithmeticRoofAsFiniteFieldRoof' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.arithmeticEtaleEndomorphismHom_roof' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.primeFieldFiniteTypeHomEquiv_map' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.primeFieldEndomorphismEquiv' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.arithmeticMultiplicativeGroupEtaleMorphism' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'EtaleCounterexample.RelativeEndomorphismClass' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'EtaleCounterexample.relativeEndomorphismPostcompose' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]

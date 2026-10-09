@@ -1,0 +1,28 @@
+PROVENANCE AND ATTRIBUTION
+Recorded: 2026-10-09
+
+The project initiator states that OpenAI GPT-6 Astra, configured with Extra
+High reasoning, developed the mathematical argument and the Lean formalization.
+This is a human-supplied account of provenance. The Lean verification record
+does not establish which model generated a source file or the originality of
+its mathematical content. Exact model snapshot identifiers and a complete
+prompt transcript are not included in this repository.
+
+AI assistance was also used to inspect the supplied project, prepare
+documentation, rerun its verification commands, and prepare this release.
+No claim is made that the repository maintainer personally discovered the
+proof or personally wrote the formalization.
+
+Repository maintainer: dedalus3.
+This identifies the maintainer and publisher of the code artifact. It does
+not assign authorship of a mathematical paper. No mathematical paper is
+included in this release. Decisions about paper authorship, publication,
+priority, and specialist review remain separate.
+
+The original implementation and audit sources are preserved byte for byte
+in the recorded source snapshot. The source report is included with one
+documentary alteration: its absolute local project path is replaced by
+"[original local project directory]". The same substitution is applied to
+verification logs if needed. These substitutions do not alter Lean source
+or proof terms. Local runtimes, dependency caches, unrelated files, and
+private drafts are excluded.

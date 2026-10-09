@@ -1,0 +1,246 @@
+FORMAL VERIFICATION REPORT — 2026-10-09, FINAL COUNTEREXAMPLES
+
+RESULT
+
+Both original core counterexamples now have unconditional Lean theorems:
+  EtaleCounterexample.finiteField_counterexample
+  EtaleCounterexample.arithmetic_counterexample
+in EtaleCounterexample/Counterexamples.lean.
+
+They concern actual schemes, actual Type-valued small etale sheaf categories,
+actual geometric morphisms with adjunctions and left exact inverse images,
+and every endomorphism in the actual finite-type scheme localization at literal
+universal homeomorphisms. They are not conditional on a comparison theorem,
+and are not merely statements about point functions or an abstract model.
+
+The finite-field theorem is uniform in every k : Type u with Field k and
+Fintype k. The arithmetic theorem is uniform in every p : Nat with Fact p.Prime,
+using G_m over ZMod p viewed over Spec Z. No mathematical failure was found.
+
+Final verification PASSED: the full build, combined axiom audit, and separate
+leanchecker replay all completed successfully (sh verify.sh, exit code 0).
+Both principal theorems and all required local bridges are kernel checked.
+
+EXACT FINAL STATEMENTS
+
+Namespace EtaleCounterexample is understood. The following statements are
+copied from the source, with universe u on the finite-field statement:
+
+  theorem finiteField_counterexample (k : Type u) [Field k] [Fintype k] :
+    ∃ T : RelativeMorphism (etaleDirectImage (multiplicativeGroupStructure k))
+        (etaleDirectImage (multiplicativeGroupStructure k)),
+      IsRelativeEquivalence T ∧ T.geometric.IsPinned.{u} ∧
+      ∀ a : End ((relativeUH (Spec (.of k))).Q.obj (multiplicativeGroupFiniteType k)),
+        relativeEndomorphismClass T ≠ finiteFieldEtaleEndomorphismHom k a
+
+  theorem arithmetic_counterexample (p : Nat) [Fact p.Prime] :
+    ∃ T : RelativeMorphism (arithmeticMultiplicativeGroupStructure p)
+        (arithmeticMultiplicativeGroupStructure p),
+      IsRelativeEquivalence T ∧ T.geometric.IsPinned.{0} ∧
+      ∀ a : End ((relativeUH (Spec (.of Int))).Q.obj (arithmeticMultiplicativeGroup p)),
+        relativeEndomorphismClass T ≠ arithmeticEtaleEndomorphismHom p a
+
+The exact fully elaborated signatures, including universes, are printed in
+Audit.lean and saved in verification/axioms-and-signatures.log.
+
+MEANING AND PROVED CONNECTIONS OF THE DEFINITIONS
+
+EtaleTopos X is Sheaf X.smallEtaleTopology (Type u), not a replacement action
+category. GeometricMorphism stores an actual adjunction and preservation of
+finite limits by its inverse image. The structural morphism is constructed in
+MultiplicativeGroup.lean and EtaleMorphisms.lean using the small affine etale
+subsite; the arithmetic structural geometric morphism is its actual composite
+with affineBaseEtaleMorphism (primeBase p).
+
+RelativeMorphism pi rho stores a comparison f_* >>> rho_* isomorphic to pi_*.
+RelativeCompatible f h gamma is precisely, for every sheaf M,
+  rho.map (gamma.hom.app M) >> h.comparison.hom.app M = f.comparison.hom.app M.
+RelativeEndomorphismClass is the quotient of these actual relative geometric
+morphisms by existence of such a compatible natural isomorphism. Thus unequal
+classes mean exactly no relative 2-isomorphism; no weaker equivalence relation
+on point actions is used.
+
+FiniteTypeSchemes S is the actual finite-type over-category of Scheme.{u}.
+Universal homeomorphism is defined by every scheme base change being a
+homeomorphism of topological spaces. Q is mathlib's Gabriel-Zisman localization.
+There is no restriction on zigzags, intermediate schemes, reducedness, or
+mixed characteristic. The monoid comparisons in the final statements are
+constructed from actual etale direct images of exhaustive UH roofs.
+
+The following bridges are proved, not assumed:
+* localizedScheme_morphism_has_roof: every localized arrow has an actual
+  finite-type UH roof. UH sources above G_m are proved affine.
+* multiplicativeGroupUH_etaleDirectImage_isEquivalence: every denominator
+  in these roofs induces an equivalence of the actual etale sheaf categories.
+* localizedRoofs_common_refinement: equal localized arrows have a common
+  actual finite-type UH refinement. The proof develops the right calculus of
+  fractions, using the surjective closed diagonal of a UH to equalize maps.
+* etaleDirectImage_composition_coherence: comparison coherence is proved as
+  equality of actual iterated-pullback maps on the sites.
+* localizedEtaleRealization_unique and localizedEtaleEndomorphism_independent:
+  all roof realizations of one arrow are relatively isomorphic.
+* localizedEtaleEndomorphism_comp, localizedEtaleEndomorphism_id,
+  localizedEtaleEndomorphism_map: realization respects composition, identity,
+  and ordinary scheme direct images, with their structural comparisons.
+* localizedEtaleEndomorphismHom packages these laws as a monoid homomorphism
+  from ALL localized endomorphisms to actual relative-isomorphism classes.
+* primeFieldFiniteTypeHomEquiv and primeFieldEndomorphismEquiv identify the
+  genuine arithmetic Hom set with the finite-field one. The adjunction proof
+  covers arbitrary localized zigzags, including mixed-characteristic objects.
+* arithmeticRoofAsFiniteFieldRoof and arithmeticEtaleEndomorphismHom_roof:
+  EVERY arithmetic roof above G_m/F_p agrees with the arithmetic realization.
+  Its source has an actual F_p-structure via its denominator. No restriction
+  to initially characteristic-p zigzags is made.
+* relativeAffineEtaleMorphism_postcompose checks the structural comparison
+  when passing from f over k to f over the composite base. Thus postcomposition
+  is connected to the actual scheme-induced etale morphism over Spec Z.
+
+This is the sufficient localized endomorphism comparison. A functor on all
+localized schemes and a scheme-perfection equivalence are not asserted.
+
+ACTUAL NONINTEGRAL TWIST AND SIGN
+
+The selected compatible exponent is twoPrimaryExponent: residues are 1 at
+powers of 2 and 0 at odd moduli. Its nonintegrality, including exclusion of
+negative integers, is proved in ProfiniteExponent.lean. PeriodicPower.lean and
+NonintegralField.lean construct ONE global central k-algebra automorphism sigma
+with exactly these compatible finite-period restrictions. It fixes every
+odd-degree extension and acts as q-power Frobenius on the quadratic extension.
+There is a moved quadratic element also in characteristic 2.
+
+The site automorphism is constructed on actual finite etale algebras and
+transported through the proved finiteEtaleSheafEquivalence to the actual small
+etale topos. nonintegralAutomorphism_fiber verifies its action under every
+actual embedding into the chosen algebraic closure. Full Galois descent is
+not needed for this direct construction.
+
+nonintegralPointMate_eq_toposIso proves the actual right-adjoint mate base
+equation. nonintegralTwist uses the INVERSE base automorphism in its comparison.
+multiplicativeGroup_nonintegral_relativePointAction constructs an actual
+relative isomorphism carrying z to sigma(z), with the positive exponent.
+No topos isomorphism is inferred from agreement on geometric points.
+
+RelativeEquivalences.lean proves the two inverse triangles. ToposPointSpace.lean
+defines the space of actual geometric point classes, with the topology generated
+by supports of subterminal objects. geometricIdentity_pointMap proves that the
+underlying identity fixes EVERY point class. Hence it is pinned, independently
+of which points are closed.
+
+ALGEBRAIC OBSTRUCTION AND THE SHORTER UH BRIDGE
+
+The preserved perfect-Laurent unit calculation is unconditional:
+  perfectLaurent_isUnit_iff_rational.
+The direct actual-scheme argument avoids needing a full scheme perfection.
+RadicialPowers.lean, AffineUHPowers.lean, and LaurentUH.lean prove power descent
+over the normal Laurent base, including nonreduced UH sources.
+LocalizedMonomial.lean proves the monomial POINT ACTION for ALL localized
+endomorphisms, using arbitrary roofs. Negative exponents, an infinite set of
+nonzero odd-degree points, and characteristic 2 are handled by the preserved
+obstruction proofs. This suffices for the topos nonalgebraicity obstruction.
+It is not advertised as a categorical Hom normal-form theorem for perfection.
+
+UniformFrobenius.lean makes the power descent exponent uniform by finite type,
+giving a genuine ring map in the other direction whose two composites are
+iterated Frobenius. SchemeFrobenius.lean constructs Frobenius on actual scheme
+structure sheaves; RelativeFrobenius.lean proves relative Frobenius is an
+isomorphism for etale objects. This yields actual UH etale invariance for every
+needed denominator in AffineUHInvariance.lean, including its structural relative
+inverse. It does not assume a global UH-invariance theorem.
+
+RoofNonalgebraicity.lean then proves that a genuine relative roof triangle
+forces its point action to be sigma, contradicting the algebraic obstruction.
+Combining this with the canonical localization comparison proves the first
+final theorem, not merely a point-action substitute.
+
+ARITHMETIC ARGUMENT
+
+The arithmetic twist is exactly the finite-field twist with its structural
+comparison postcomposed by the actual i_* for Spec F_p -> Spec Z.
+RelativeBaseChange.lean proves preservation of relative triangles and relative
+invertibility under this operation.
+
+The proof uses a narrower direct separation argument instead of assuming the
+closed-subtopos full-faithfulness theorem. For each algebraic z in characteristic
+p choose n > 0 with z^(p^n) = z. ArithmeticEtaleCoordinates.lean constructs the
+actual standard etale Z-algebra for X^(p^n)-X with its derivative inverted. Its
+derivative at z is -1, including p=2. The lift and its section value are proved.
+ArithmeticBaseChange.lean checks the actual structural-comparison triangle;
+arithmetic_postcompose_point_eq then forces equal coordinates for arithmetic
+relative point isomorphisms. ArithmeticRoofNonalgebraicity.lean repeats the
+actual roof obstruction using this proved separation. Together with the
+arbitrary-zigzag arithmetic localization comparison, this proves the second
+final theorem without any unproved full-faithfulness hypothesis.
+
+BUILD, VERSIONS, AND AXIOMS
+
+Project: [original local project directory]
+Lean: 4.34.0, arm64-apple-darwin24.6.0
+Lean commit: 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b
+mathlib: v4.34.0, 5ed2965256430c3649e86755f9576b54eca72435
+Dependencies remain pinned in lake-manifest.json. No version upgrades were made.
+
+Reproduction, from the project directory:
+  export PATH="$PWD/.toolchain/lean-4.34.0-darwin_aarch64/bin:$PATH"
+  lake build
+  lake env lean Audit.lean
+  lake env leanchecker -v EtaleCounterexample
+or:
+  sh verify.sh
+
+There are 70 implementation modules, all reached by the root import.
+Final combined build: PASSED, 3770 jobs.
+Combined signature/axiom audit: PASSED, 168 principal declarations.
+Independent kernel replay: PASSED, all 70 implementation modules plus the root.
+sh verify.sh completed with exit code 0. Detailed output is saved in:
+  verification/build.log
+  verification/axioms-and-signatures.log
+  verification/kernel-replay.log
+A compact copy of the two final signatures and their axiom output is in:
+  verification/final-theorems.log
+
+The individual principal-theorem axiom output is exactly:
+  'EtaleCounterexample.finiteField_counterexample' depends on axioms:
+    [propext, Classical.choice.{u}, Quot.sound.{u}]
+  'EtaleCounterexample.arithmetic_counterexample' depends on axioms:
+    [propext, Classical.choice.{u}, Quot.sound.{u}]
+
+No proof placeholders, custom axioms, native_decide, or unchecked external
+certificates occur in the implementation. All implementation modules use
+autoImplicit=false. Compiler diagnostics from unsuccessful intermediate edits
+are not claimed as proofs. Only successfully built final declarations count.
+
+A separate leanchecker replay rechecks serialized project declarations using
+Lean's kernel against imported environments. It is not a second implementation
+of Lean, and does not claim a --fresh replay of every mathlib dependency.
+
+AUXILIARY TARGETS NOT CLAIMED / NO HIDDEN ASSUMPTIONS
+
+There are NO remaining comparison, descent, obstruction, or sign assumptions
+in either final counterexample theorem. The following stronger requested
+auxiliary statements remain unproved, and are NOT dependencies of those proofs:
+* Full equivalence with all discrete continuous absolute-Galois-group sets.
+  The needed finite-etale site/sheaf equivalence and fiber action are proved.
+* A topological isomorphism Zhat with the product of all l-adic integer rings.
+  The explicit inverse-limit exponent and all relevant residues are proved.
+* The entire family T_a, distinctness for every a, and exact algebraic iff
+  integral classification. The explicit nonintegral member is fully constructed.
+* Scheme perfection, the global localization/perfection categorical equivalence,
+  and a categorical monomial Hom normal form. The perfect-Laurent ring units
+  and the necessary all-localized-morphism point-action classification are proved.
+* General UH etale invariance for every scheme. The denominators needed for
+  the final endomorphism comparisons have unconditional actual invariance proofs.
+* Full faithfulness of i_* on ALL etale sheaves for a closed immersion.
+  Actual arithmetic point separation above replaces this route in the core proof.
+* The secondary integral-exponent classification and its relative Frobenius
+  sufficiency statement. These were explicitly deferred in the latest request.
+
+Thus the original counterexamples are preserved and proved by smaller valid
+bridges; these additional general-purpose theorems are not silently assumed or
+reported as complete. No novelty, priority, or historical attribution is part
+of a Lean theorem here.
+
+HISTORY
+
+The incoming report is preserved verbatim in REPORT.before-final-counterexamples.txt.
+Its statements of outstanding gaps describe the earlier state and are superseded
+by this report. The existing verified sources were retained and extended.

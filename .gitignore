@@ -1,0 +1,9 @@
+.lake/
+.toolchain/
+.cache/
+.DS_Store
+verification/build.log
+verification/axioms-and-signatures.log
+verification/kernel-replay.log
+*.olean
+*.ilean

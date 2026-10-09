@@ -1,0 +1,34 @@
+EtaleCounterexample.finiteField_counterexample.{u_1} : ∀ (k : Type u_1) [inst : Field.{u_1} k]
+  [inst_1 : Fintype.{u_1} k],
+  ∃ T,
+    EtaleCounterexample.IsRelativeEquivalence.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} T ∧
+      EtaleCounterexample.GeometricMorphism.IsPinned.{u_1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1}
+          (EtaleCounterexample.RelativeMorphism.geometric.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} T) ∧
+        ∀
+          (a :
+            CategoryTheory.End.{u_1 + 1, u_1 + 1}
+              (CategoryTheory.Functor.obj.{u_1, u_1 + 1, u_1 + 1, u_1 + 1}
+                (CategoryTheory.MorphismProperty.Q.{u_1, u_1 + 1}
+                  (EtaleCounterexample.relativeUH.{u_1} (AlgebraicGeometry.Spec.{u_1} ↧k)))
+                (EtaleCounterexample.multiplicativeGroupFiniteType.{u_1} k))),
+          Ne.{u_1 + 2} (EtaleCounterexample.relativeEndomorphismClass.{u_1 + 1, u_1 + 1, u_1 + 1, u_1 + 1} T)
+            ((EtaleCounterexample.finiteFieldEtaleEndomorphismHom.{u_1} k) a)
+
+'EtaleCounterexample.finiteField_counterexample' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+
+EtaleCounterexample.arithmetic_counterexample : ∀ (p : ℕ) [inst : Fact (Nat.Prime p)],
+  ∃ T,
+    EtaleCounterexample.IsRelativeEquivalence.{1, 1, 1, 1, 1, 1} T ∧
+      EtaleCounterexample.GeometricMorphism.IsPinned.{0, 1, 1, 1, 1}
+          (EtaleCounterexample.RelativeMorphism.geometric.{1, 1, 1, 1, 1, 1} T) ∧
+        ∀
+          (a :
+            CategoryTheory.End.{1, 1}
+              (CategoryTheory.Functor.obj.{0, 1, 1, 1}
+                (CategoryTheory.MorphismProperty.Q.{0, 1}
+                  (EtaleCounterexample.relativeUH.{0} (AlgebraicGeometry.Spec.{0} ↧ℤ)))
+                (EtaleCounterexample.arithmeticMultiplicativeGroup p))),
+          Ne.{2} (EtaleCounterexample.relativeEndomorphismClass.{1, 1, 1, 1} T)
+            ((EtaleCounterexample.arithmeticEtaleEndomorphismHom p) a)
+
+'EtaleCounterexample.arithmetic_counterexample' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]

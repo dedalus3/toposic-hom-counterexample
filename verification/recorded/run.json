@@ -1,0 +1,50 @@
+{
+  "started_utc": "2026-10-09T22:45:05.026214+00:00",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "verification_kind": "incremental project build followed by axiom audit and serialized project kernel replay",
+  "full_dependency_fresh_replay": false,
+  "commands": [
+    {
+      "command": [
+        "lake",
+        "build"
+      ],
+      "started_utc": "2026-10-09T22:45:05.200599+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T22:45:07.519066+00:00",
+      "log": "build.log"
+    },
+    {
+      "command": [
+        "lake",
+        "env",
+        "lean",
+        "Audit.lean"
+      ],
+      "started_utc": "2026-10-09T22:45:07.519327+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T22:45:12.795110+00:00",
+      "log": "axioms-and-signatures.log"
+    },
+    {
+      "command": [
+        "lake",
+        "env",
+        "leanchecker",
+        "-v",
+        "EtaleCounterexample"
+      ],
+      "started_utc": "2026-10-09T22:45:12.795407+00:00",
+      "exit_code": 0,
+      "finished_utc": "2026-10-09T22:55:51.346341+00:00",
+      "log": "kernel-replay.log"
+    }
+  ],
+  "source_files_unchanged": true,
+  "lean_version": "Lean (version 4.34.0, arm64-apple-darwin24.6.0, commit 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b, Release)",
+  "mathlib_revision": "5ed2965256430c3649e86755f9576b54eca72435",
+  "proof_object_count": 71,
+  "implementation_module_count": 70,
+  "finished_utc": "2026-10-09T22:55:51.410351+00:00",
+  "status": "passed"
+}

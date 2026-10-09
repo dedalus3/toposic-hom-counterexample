@@ -1,0 +1,70 @@
+LEAN VERIFICATION RECORD
+Recorded run: 2026-10-09 (UTC)
+Status: PASSED
+Repository: https://github.com/dedalus3/toposic-hom-counterexample
+
+This is an unsigned local verification record. It is not an external
+certificate, digital signature, specialist endorsement, or novelty claim.
+
+PRINCIPAL THEOREMS
+
+EtaleCounterexample.finiteField_counterexample
+EtaleCounterexample.arithmetic_counterexample
+
+Their complete printed types and axiom lists are in
+recorded/final-theorems.log. Both depend only on:
+  propext, Classical.choice, Quot.sound
+(Universe annotations are retained in the full audit output.)
+
+These declarations establish the finite-field and arithmetic failures of
+fullness described in README.md. Their definitions, not this prose summary,
+are the formal specifications. Review Counterexamples.lean and the underlying
+relative-morphism and localization definitions when assessing that match.
+
+ENVIRONMENT
+
+Lean 4.34.0
+Lean commit: 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b
+mathlib commit: 5ed2965256430c3649e86755f9576b54eca72435
+Platform: macOS 26.6.2, ARM64
+
+CHECKS PERFORMED
+
+1. lake build                          exit 0
+2. lake env lean Audit.lean             exit 0
+3. lake env leanchecker -v EtaleCounterexample
+                                       exit 0
+
+The replay ran from 22:45:12 to 22:55:51 UTC on 2026-10-09 and recorded 71
+project modules (70 implementation modules plus the root import module).
+The implementation, audit, build configuration, dependency manifest, and
+verification script matched the same 76-file SHA-256 snapshot before and
+after the run. They were copied byte for byte to this repository.
+
+The build was incremental using existing dependencies and build artifacts.
+The subsequent kernel replay was a new run. It rechecked serialized project
+declarations against imported environments; it was not a --fresh replay of
+all mathlib dependencies, nor verification by a second kernel implementation.
+
+REPRODUCTION AND EVIDENCE
+
+See README.md for prerequisites. From the repository root:
+  python3 verify-source.py
+  lake exe cache get
+  sh verify.sh
+
+source-snapshot.json binds source paths to SHA-256 values. certificate.json
+records the source-manifest hash, log hashes, exact command statuses, version
+information, and timestamps. recorded/ contains the successful run's logs.
+No binary proof objects or dependency caches are required in the repository:
+the pinned toolchain and sources allow the project to be rebuilt.
+
+SCOPE AND TRUST
+
+The two formal theorem statements are the certified mathematical scope.
+The global family classification, informal paper proofs, literature review,
+and historical or novelty claims are not certified by these commands.
+The trusted components include the Lean kernel and runtime, imported library
+environments, and the ordinary execution platform. A correct formal proof
+still requires a human assessment that its definitions express the intended
+mathematical question. AI provenance is separately documented in PROVENANCE.txt.
